@@ -1,30 +1,34 @@
+#include "ping.h"
+
 #include <stdio.h>  // fprintf()
 #include <sys/socket.h>  // socket()
 
 //https://www.geeksforgeeks.org/computer-networks/ping-in-c/
 
+#include "ping.h"
 
-/*
- * Functions
- */
+
+int is_ip(char *str)
+{
+	struct sockaddr_in sa;
+}
+
+void ping_ctx_init(s_ping_ctx *ping_ctx, int argc, char **argv)
+{
+
+}
 
 int main(int argc, char **argv)
 {
-	int sockfd;
+	s_ping_ctx ping_ctx;
 
-	if (argc != 2) {
-		fprintf(stderr, "");
+	if (argc < 2) {
 		return (1);
 	}
 
-	ip_addr
+	ping_ctx_init(argc, argv);
 
-	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)
-	if (sockfd < 0) {
-		perror("socket() failed");
-		return (1);
-	}
+	ping(argc, argv);
 
 	return (0);
 }
-
