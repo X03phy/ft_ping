@@ -28,16 +28,3 @@ int ping(int argc, char **argv)
 	send_ping();
 	return (0);
 }
-
-// int send_ping()
-// {
-// 	while (g_pingloop) {
-
-// 	}
-// }
-
-const char *dns_lookup(const char *input)
-{
-	struct addrinfo* addr;
-	struct sockaddr_in* internet_addr
-}

@@ -2,7 +2,6 @@
 #define PING_H
 
 /* Includes */
-#include <stdint.h>  // For types
 
 /* Macros */
 #define PING_USAGE_FORMAT "Usage: %s [flags] host\n"

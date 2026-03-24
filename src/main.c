@@ -26,7 +26,9 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	ping_ctx_init(argc, argv);
+	ping_ctx_init(&ping_ctx);
+
+	ping_ctx_setup(&ping_ctx);
 
 	ping(argc, argv);
 
