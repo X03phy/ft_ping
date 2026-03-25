@@ -6,7 +6,7 @@
 #include <stdio.h>      // perror()
 #include <stdlib.h>     // malloc(), free()
 
-int dns_lookup(char ip[INET_ADDRSTRLEN], const char *hostname)
+int dns_lookup(char ip[INET_ADDRSTRLEN], const char *target)
 {
 	struct addrinfo    hints;
 	int                errcode;
@@ -16,7 +16,7 @@ int dns_lookup(char ip[INET_ADDRSTRLEN], const char *hostname)
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
 
-	errcode = getaddrinfo(hostname, NULL, &hints, &res);
+	errcode = getaddrinfo(target, NULL, &hints, &res);
 	if (errcode != 0) {
 		fprintf(stderr, "getaddrinfo(): %s\n", gai_strerror(errcode));
 		return (1);
