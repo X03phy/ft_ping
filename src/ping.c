@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <signal.h>
 #include <stdio.h>
-
+#include <unistd.h>
 
 int g_pingloop = 1;
 
@@ -24,7 +24,9 @@ int ping(int argc, char **argv)
 	}
 
 	signal(SIGINT, ping_signal_handler);
-
-	send_ping();
+	(void)argc;
+	(void)argv;
+	// send_ping();
+	close(sockfd);
 	return (0);
 }
