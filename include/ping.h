@@ -19,6 +19,11 @@
 
 /* Structures */
 typedef struct {
+	const char *progname;
+	const char *target;
+
+	char       ip[INET_ADDRSTRLEN];
+
 	int    ttl;          // -t : Time To Live
 	int    count;        // -c : nombre de paquets
 	double interval;     // -i : intervalle entre envois (secondes)
@@ -27,22 +32,12 @@ typedef struct {
 	size_t packet_size;  // -s : taille du payload
 
 	unsigned long flags;
-} s_ping_opts;
 
-
-typedef struct {
-	const char *progname;
-	const char *target;
-	char       ip[INET_ADDRSTRLEN];
-
-	int        sockfd;
 	//uint16_t pid;        // identifiant ICMP = getpid()
 	//uint16_t seq;        // numéro de séquence courant
 
 	//struct sockaddr_in dest;     // adresse destination résolue
 
-	s_ping_opts opts;
-	//s_ping_stats     stats;
 } s_ping_ctx;
 
 /* Functions */
@@ -52,10 +47,10 @@ typedef struct {
 int dns_lookup(char ip[INET_ADDRSTRLEN], const char *target);
 
 /* ping_ctx.c */
-void ping_ctx_init(s_ping_ctx *ping_ctx);
-int ping_ctx_setup(s_ping_ctx *ping_ctx, int argc, char **argv);
+void ping_ctx_init(s_ping_ctx *ctx);
+int ping_ctx_setup(s_ping_ctx *ctx);
 
 /* ping.c */
-int ping(int argc, char **argv);
+int ping(s_ping_ctx *ctx);
 
 #endif
