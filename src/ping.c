@@ -8,22 +8,26 @@
 
 int g_pingloop = 1;
 
-void ping_signal_handler()
+void ping_signal_handler(void)
 {
 	g_pingloop = 0;
 }
 
 int ping(s_ping_ctx *ping_ctx)
 {
-	ping_ctx->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (ping_ctx->sockfd < 0)
-		perror("socket");
+	int sockfd;
+
+	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (sockfd < 0) {
+		perror("socket()");
+		return (1);
+	}
 
 	
 
 
 	while (g_pingloop) {
-		
+		break;
 	}
 
 	return (0);

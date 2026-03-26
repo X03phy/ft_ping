@@ -13,7 +13,7 @@ int dns_lookup(char ip[INET_ADDRSTRLEN], const char *target)
 	struct addrinfo    *res;
 	struct sockaddr_in *addr;
 
-	memset(&hints, 0, sizeof(hints));
+	memset(&hints, 0, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 
 	errcode = getaddrinfo(target, NULL, &hints, &res);

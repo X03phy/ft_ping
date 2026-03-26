@@ -8,7 +8,7 @@
 /* Macros */
 /* Messages */
 #define PING_USAGE_FORMAT "Usage: %s [flags] host\n"
-#define PING_UNKNOWN_HOST_FORMAT "%s: Error: Cannot resolve %s: Unknown host"
+#define PING_UNKNOWN_HOST_FORMAT "%s: Error: Cannot resolve %s: Unknown host\n"
 
 /* Default values */
 #define PING_DEFAULT_TTL      64
@@ -48,7 +48,6 @@ int dns_lookup(char ip[INET_ADDRSTRLEN], const char *target);
 
 /* ping_ctx.c */
 void ping_ctx_init(s_ping_ctx *ctx);
-int ping_ctx_setup(s_ping_ctx *ctx);
 
 /* ping.c */
 int ping(s_ping_ctx *ctx);
