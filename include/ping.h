@@ -22,7 +22,7 @@ typedef struct {
 	const char *progname;
 	const char *target;
 
-	char       ip[INET_ADDRSTRLEN];
+	char ip[INET_ADDRSTRLEN];
 
 	int    ttl;          // -t : Time To Live
 	int    count;        // -c : nombre de paquets
@@ -41,7 +41,8 @@ typedef struct {
 } s_ping_ctx;
 
 /* Functions */
-/* print.c */
+/* parse_args.c */
+int parse_args(s_ping_ctx *ctx, int argc, char **argv);
 
 /* dns_lookup.c */
 int dns_lookup(char ip[INET_ADDRSTRLEN], const char *target);

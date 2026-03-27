@@ -1,6 +1,5 @@
 #include "ping.h"
 
-#include "icmp.h"
 #include <sys/socket.h>
 #include <signal.h>
 #include <stdio.h>
@@ -13,7 +12,7 @@ void ping_signal_handler(void)
 	g_pingloop = 0;
 }
 
-int ping(s_ping_ctx *ping_ctx)
+int ping(s_ping_ctx *ctx)
 {
 	int sockfd;
 
@@ -22,12 +21,11 @@ int ping(s_ping_ctx *ping_ctx)
 		perror("socket()");
 		return (1);
 	}
-
-	
-
+	printf("yes it works\n");
 
 	while (g_pingloop) {
 		break;
+		(void)ctx;
 	}
 
 	return (0);
