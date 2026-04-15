@@ -2,10 +2,10 @@
 
 #include <netinet/in.h> // struct sockaddr_in
 #include <sys/socket.h> // socklen_t, struct sockaddr, sendto(), recvfrom()
-#include <sys/types.h>  // ssize_t
+#include <sys/types.h> // ssize_t
 
 #include <stddef.h> // size_t
-#include <stdio.h>  // dprintf(), perror()
+#include <stdio.h> // dprintf(), perror()
 
 int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 {

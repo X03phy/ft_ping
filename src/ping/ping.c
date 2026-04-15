@@ -26,7 +26,7 @@ int ping_run(s_ping_ctx *ctx)
 
 	print_header(ctx);
 	ret = ping_loop(ctx); /* Handle error here */
-	// print_stats(ctx);
+	print_stats(ctx);
 
 	close(ctx->sockfd); /* ping_cleanup */
 	return (ret);
@@ -65,10 +65,10 @@ static int ping_once(s_ping_ctx *ctx, unsigned short seq)
 	icmp_build(&pkt, seq);
 	if (icmp_send(&pkt, ctx->sockfd, &ctx->addr) != 0)
 		return (1);
-	// ctx->sent++;
+	ctx->sent++;
 	if (icmp_recv(&r, ctx->sockfd, buf, sizeof(buf), &from) != 0)
 		return (1);
-	// ctx->received++;
-	// print_response(ctx, buf, r, &from);
+	ctx->received++;
+	//print_response(ctx, buf, r, &from);
 	return (0);
 }

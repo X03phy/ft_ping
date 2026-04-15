@@ -62,6 +62,8 @@ int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in
 /* stats.c */
 void print_header(const s_ping_ctx *ctx);
 
+void print_stats(const s_ping_ctx *ctx);
+
 
 /* ping.c */
 int ping_run(s_ping_ctx *ctx);
