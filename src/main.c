@@ -24,7 +24,7 @@ static void ping_init(s_ping_ctx *ctx)
 	ctx->progname = NULL;
 	ctx->host = NULL;
 
-	// ctx->count    = -1;       // -1 = infini (comme le vrai ping)
+	ctx->count    = -1;       // -1 = infini (comme le vrai ping)
 	ctx->interval = 1.0;
 	// ctx->ttl      = 64;       // TTL par défaut standard
 	// ctx->flags    = 0;

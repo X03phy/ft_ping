@@ -15,18 +15,15 @@ void print_header(const s_ping_ctx *ctx)
 
 void print_stats(const s_ping_ctx *ctx)
 {
-	double loss;
+	double loss, avg;
 
 	printf("\n--- %s ping statistics ---\n", ctx->host);
 
-	if (ctx->sent == 0)
-		loss = 0.0;
-	else
-		loss = ((ctx->sent - ctx->received) * 100.0)
-			/ ctx->sent;
-
+	loss = (ctx->sent != 0) ? ((ctx->sent - ctx->received) * 100.0) / ctx->sent : 0;
 	printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", ctx->sent, ctx->received, loss);
 
+	avg = (ctx->received) ? ctx->rtt_total / ctx-> received : 0;
+	printf("rtt min/avg/max/mdev = %f/%f/%f ms\n", ctx->rtt_min, avg, ctx->rtt_max);
 }
 
 //void print_response(const s_ping_ctx *ctx)
