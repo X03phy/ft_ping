@@ -3,6 +3,8 @@
 #include <netdb.h> // struct addrinfo, getaddrinfo(), freeaddrinfo()
 #include <netinet/in.h> // struct sockaddr_in
 #include <sys/socket.h> // AF_INET, IPPROTO_ICMP, SOCK_RAW, socket()
+#include <sys/time.h> // struct timeval, gettimeofday()
+#include <netinet/ip.h> // IP_TTL
 
 #include <stddef.h> // NULL
 #include <stdio.h> // perror()
@@ -12,6 +14,8 @@ static int resolve_host(struct sockaddr_in *addr, const char *host);
 
 int ping_setup(s_ping_ctx *ctx)
 {
+	struct timeval timeout;
+
 	if (resolve_host(&ctx->addr, ctx->host) != 0) {
 		return (1);
 	}
@@ -22,7 +26,17 @@ int ping_setup(s_ping_ctx *ctx)
 		return (1);
 	}
 
-	
+	if (setsockopt(ctx->sockfd, IPPROTO_IP, IP_TTL, &ctx->ttl, sizeof(ctx->ttl)) == -1) {
+		perror("setsockopt() TTL");
+		return (1);
+	}
+
+	timeout.tv_sec  = (long)ctx->interval;
+	timeout.tv_usec = (long)((ctx->interval - timeout.tv_sec) * 1000000);
+	if (setsockopt(ctx->sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) {
+		perror("setsockopt() RCVTIMEO");
+		return (1);
+	}
 
 	return (0);
 }

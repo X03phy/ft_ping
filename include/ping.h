@@ -33,6 +33,7 @@ typedef struct s_ping_ctx {
 	const char *progname;
 	const char *host;
 
+	int ttl;
 	long long count;
 	double interval;
 	unsigned long flags;
