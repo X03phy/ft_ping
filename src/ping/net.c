@@ -22,6 +22,8 @@ int ping_setup(s_ping_ctx *ctx)
 		return (1);
 	}
 
+	
+
 	return (0);
 }
 

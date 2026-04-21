@@ -21,7 +21,7 @@ DOCKER_FLAGS := --cap-add=NET_RAW --rm -it -v $(shell pwd):/app -w /app
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $^ -o $@
+	$(CC) $^ -o $@ -lm
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)

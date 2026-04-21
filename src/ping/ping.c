@@ -71,7 +71,7 @@ static int ping_once(s_ping_ctx *ctx, unsigned short seq)
 	ctx->sent++;
 
 	if (icmp_recv(&r, ctx->sockfd, buf, sizeof(buf), &from) != 0)
-		return (1);
+		return (0);
 
 	ctx->received++;
 	rtt = print_response(buf, r, &from);
