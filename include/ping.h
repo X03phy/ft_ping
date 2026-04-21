@@ -15,8 +15,16 @@
 #define IP_HDR_SIZE 20
 
 /* Structures */
+typedef struct s_icmp_hdr {
+	uint8_t type;
+	uint8_t code;
+	uint16_t checksum;
+	uint16_t id;
+	uint16_t seq;
+} s_icmp_hdr;
+
 typedef struct s_icmp_pkt {
-	struct icmp hdr;
+	s_icmp_hdr hdr;
 	char data[DATA_SIZE];
 } s_icmp_pkt;
 
@@ -39,7 +47,6 @@ typedef struct s_ping_ctx {
 	double rtt_min;
 	double rtt_max;
 	double rtt_sum;
-	double rtt_total;
 } s_ping_ctx;
 
 /* Functions */
@@ -62,7 +69,7 @@ int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in
 
 /* stats.c */
 void print_header(const s_ping_ctx *ctx);
-
+double print_response(char *buf, size_t r, struct sockaddr_in *from);
 void print_stats(const s_ping_ctx *ctx);
 
 
