@@ -16,15 +16,15 @@ void icmp_build(s_icmp_pkt *pkt, unsigned short seq)
 	memset(pkt, 0, sizeof(*pkt));
 	icmp_init_hdr(pkt, seq);
 	icmp_fill_data(pkt);
-	pkt->hdr.icmp_cksum = icmp_checksum(pkt, sizeof(struct icmp) + DATA_SIZE);
+	pkt->hdr.checksum = icmp_checksum(pkt, sizeof(*pkt));
 }
 
 static void icmp_init_hdr(s_icmp_pkt *pkt, unsigned short seq)
 {
-	pkt->hdr.icmp_type = ICMP_ECHO;
-	pkt->hdr.icmp_code = 0;
-	pkt->hdr.icmp_id = htons((unsigned short)getpid());
-	pkt->hdr.icmp_seq = htons(seq);
+	pkt->hdr.type = ICMP_ECHO;
+	pkt->hdr.code = 0;
+	pkt->hdr.id = htons((unsigned short)getpid());
+	pkt->hdr.seq = htons(seq);
 }
 
 static void icmp_fill_data(s_icmp_pkt *pkt)

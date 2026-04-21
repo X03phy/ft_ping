@@ -30,7 +30,8 @@ static void ping_init(s_ping_ctx *ctx)
 	// ctx->flags    = 0;
 	ctx->sent     = 0;
 	ctx->received = 0;
-	// ctx->rtt_min  = 0.0;
-	// ctx->rtt_max  = 0.0;
-	// ctx->rtt_sum  = 0.0;
+	ctx->rtt_min  = -1.0;
+	ctx->rtt_max  = -1.0;
+	ctx->rtt_sum  = 0.0;
+	ctx->rtt_sum_sq = 0.0;
 }

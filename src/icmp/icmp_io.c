@@ -16,6 +16,7 @@ int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 		perror("sendto()");
 		return (1);
 	}
+
 	if ((size_t)ret != sizeof(*pkt)) {
 		dprintf(2, "partial send\n");
 		return (1);
@@ -27,7 +28,7 @@ int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in *from)
 {
 	socklen_t fromlen;
-	ssize_t   r;
+	ssize_t r;
 
 	fromlen = sizeof(*from);
 	r = recvfrom(sockfd, buf, len, 0, (struct sockaddr *)from, &fromlen);
@@ -37,5 +38,6 @@ int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in
 	}
 
 	*out = (size_t)r;
+
 	return (0);
 }
