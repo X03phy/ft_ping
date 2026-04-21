@@ -47,6 +47,7 @@ typedef struct s_ping_ctx {
 	double rtt_min;
 	double rtt_max;
 	double rtt_sum;
+	double rtt_sum_sq;
 } s_ping_ctx;
 
 /* Functions */
