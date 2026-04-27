@@ -38,9 +38,11 @@ static void icmp_fill_data(s_icmp_pkt *pkt)
 
 static unsigned short icmp_checksum(void *data, size_t len) //! recheck
 {
-	unsigned short *buf = data;
-	unsigned int   sum = 0;
+	unsigned short *buf;
+	unsigned int   sum;
 
+	buf = data;
+	sum = 0;
 	while (len > 1) {
 		sum += *buf++;
 		len -= 2;
@@ -49,5 +51,6 @@ static unsigned short icmp_checksum(void *data, size_t len) //! recheck
 		sum += *(unsigned char *)buf;
 	sum = (sum >> 16) + (sum & 0xFFFF);
 	sum += (sum >> 16);
+
 	return (~sum);
 }
