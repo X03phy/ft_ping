@@ -6,7 +6,7 @@
 #include <sys/types.h> // ssize_t
 
 #include <stddef.h> // size_t
-#include <stdio.h> // stderr, dprintf(), perror()
+#include <stdio.h> // dprintf(), perror()
 
 int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 {
@@ -20,7 +20,7 @@ int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 	}
 
 	if ((size_t)ret != sizeof(*pkt)) {
-		dprintf(stderr, "partial send\n"); //! Modify error message
+		dprintf(2, "partial send\n"); //! Modify error message
 		return (1);
 	}
 
