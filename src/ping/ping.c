@@ -48,7 +48,7 @@ static int ping_loop(s_ping_ctx *ctx)
 		seq++;
 		if (ctx->count != -1 && seq >= (unsigned short)ctx->count)
 			break ;
-		//sleep((unsigned int)ctx->interval);
+		sleep((unsigned int)ctx->interval);
 	}
 
 	return (0);
