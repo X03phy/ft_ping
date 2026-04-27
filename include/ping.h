@@ -4,6 +4,7 @@
 /* Includes */
 #include <netinet/in.h> // struct sockaddr_in
 #include <netinet/ip_icmp.h> // struct icmp
+#include <sys/time.h> // struct timeval
 
 /* Macros */
 #define PING_FLAG_VERBOSE (1 << 0)
@@ -67,11 +68,11 @@ void icmp_build(s_icmp_pkt *pkt, unsigned short seq);
 
 /* icmp/icmp_io.c */
 int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr);
-int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in *from);
+int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in *from, struct timeval *tv_recv);
 
 /* stats.c */
 void print_header(const s_ping_ctx *ctx);
-double print_response(char *buf, size_t r, struct sockaddr_in *from);
+void print_response(char *buf, size_t r, struct sockaddr_in *from, double rtt);
 void print_stats(const s_ping_ctx *ctx);
 
 

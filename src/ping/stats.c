@@ -7,8 +7,6 @@
 #include <string.h>
 #include <math.h>
 
-static double time_diff_ms_safe(struct timeval *start, struct timeval *end);
-
 void print_header(const s_ping_ctx *ctx)
 {
 	char ip[INET_ADDRSTRLEN];
@@ -17,22 +15,15 @@ void print_header(const s_ping_ctx *ctx)
 	printf("PING %s (%s): %d data bytes\n", ctx->host, ip, DATA_SIZE);
 }
 
-double print_response(char *buf, size_t r, struct sockaddr_in *from)
+void print_response(char *buf, size_t r, struct sockaddr_in *from, double rtt)
 {
-	double rtt;
 	size_t size;
 	s_icmp_pkt *pkt;
 	struct ip *ip;
-	struct timeval tv_send, tv_recv;
-
-	gettimeofday(&tv_recv, NULL);
 
 	ip = (struct ip *)buf;
 	pkt = (s_icmp_pkt *)(buf + (ip->ip_hl * 4));
 	size = r - (ip->ip_hl * 4);
-
-	memcpy(&tv_send, pkt->data, sizeof(tv_send));
-	rtt = time_diff_ms_safe(&tv_send, &tv_recv);
 
 	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
 		size,
@@ -41,22 +32,6 @@ double print_response(char *buf, size_t r, struct sockaddr_in *from)
 		ip->ip_ttl,
 		rtt
 	);
-
-	return (rtt);
-}
-
-static double time_diff_ms_safe(struct timeval *start, struct timeval *end)
-{
-	struct timeval tmp;
-
-	tmp.tv_sec = end->tv_sec - start->tv_sec;
-	tmp.tv_usec = end->tv_usec - start->tv_usec;
-	if (tmp.tv_usec < 0) {
-		tmp.tv_sec -= 1;
-		tmp.tv_usec += 1000000;
-	}
-
-	return (tmp.tv_sec * 1000.0 + tmp.tv_usec / 1000.0);
 }
 
 void print_stats(const s_ping_ctx *ctx)
