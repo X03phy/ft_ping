@@ -8,14 +8,14 @@
 #include <string.h> // memcpy(), memset()
 
 static void icmp_init_hdr(s_icmp_pkt *pkt, unsigned short seq);
-static void icmp_fill_data(s_icmp_pkt *pkt);
+static void icmp_fill_data_with_time(s_icmp_pkt *pkt);
 static unsigned short icmp_checksum(void *data, size_t len);
 
 void icmp_build(s_icmp_pkt *pkt, unsigned short seq)
 {
 	memset(pkt, 0, sizeof(*pkt));
 	icmp_init_hdr(pkt, seq);
-	icmp_fill_data(pkt);
+	icmp_fill_data_with_time(pkt);
 	pkt->hdr.checksum = icmp_checksum(pkt, sizeof(*pkt));
 }
 
@@ -27,7 +27,7 @@ static void icmp_init_hdr(s_icmp_pkt *pkt, unsigned short seq)
 	pkt->hdr.seq = htons(seq);
 }
 
-static void icmp_fill_data(s_icmp_pkt *pkt)
+static void icmp_fill_data_with_time(s_icmp_pkt *pkt)
 {
 	struct timeval tv;
 
