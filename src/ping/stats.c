@@ -15,15 +15,16 @@ void print_header(const s_ping_ctx *ctx)
 	printf("PING %s (%s): %d data bytes\n", ctx->host, ip, DATA_SIZE);
 }
 
-void print_response(char *buf, size_t r, struct sockaddr_in *from, double rtt)
+void print_response(char *buf, size_t r, struct in_addr *in, double rtt)
 {
-	size_t size;
 	s_icmp_pkt *pkt;
+	size_t size;
 	struct ip *ip;
 
 	ip = (struct ip *)buf;
-	pkt = (s_icmp_pkt *)(buf + (ip->ip_hl * 4));
-	size = r - (ip->ip_hl * 4);
+	size = (ip->ip_hl * 4);
+	pkt = (s_icmp_pkt *)(buf + size);
+	size = r - size;
 
 	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
 		size,
