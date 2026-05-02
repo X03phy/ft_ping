@@ -72,7 +72,7 @@ int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in
 
 /* stats.c */
 void print_header(const s_ping_ctx *ctx);
-void print_response(char *buf, size_t r, struct sockaddr_in *from, double rtt);
+void print_response(const char *buf, size_t r, const struct in_addr *in, double rtt);
 void print_stats(const s_ping_ctx *ctx);
 
 
