@@ -26,48 +26,41 @@ int icmp_send(const t_icmp_pkt *pkt, const t_ping_ctx *ctx)
 	return (0);
 }
 
-static int icmp_parse(t_icmp_pkt *pkt, const char *buf, size_t len)
+static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len)
 {
-	struct ip *ip;
-	t_icmp_pkt *recv_pkt;
-	size_t ip_hlen;
+	struct ip   *ip;
+	t_icmp_pkt  *recv_pkt;
 
 	if (len < IP_HDR_SIZE + sizeof(t_icmp_pkt)) {
 		dprintf(2, "icmp_parse(): packet too short\n");
 		return (1);
 	}
-	ip = (struct ip *)buf;
-	ip_hlen = ip->ip_hl * 4;
-	recv_pkt = (t_icmp_pkt *)(buf + ip_hlen);
-	if (recv_pkt->hdr.type != ICMP_ECHOREPLY) {
-		dprintf(2, "icmp_parse(): not an echo reply (type=%d)\n",
-			recv_pkt->hdr.type);
+	ip       = (struct ip *)buf;
+	recv_pkt = (t_icmp_pkt *)(buf + ip->ip_hl * 4);
+	if (recv_pkt->hdr.type != ICMP_ECHOREPLY)
 		return (1);
-	}
 	if (ntohs(recv_pkt->hdr.id) != (uint16_t)(getpid() & 0xFFFF))
 		return (1);
-	*pkt = *recv_pkt;
-	pkt->hdr.seq = ntohs(recv_pkt->hdr.seq);
-	pkt->hdr.id = ntohs(recv_pkt->hdr.id);
-	pkt->hdr.checksum = ntohs(recv_pkt->hdr.checksum);
+	reply->pkt          = *recv_pkt;
+	reply->pkt.hdr.seq  = ntohs(recv_pkt->hdr.seq);
+	reply->pkt.hdr.id   = ntohs(recv_pkt->hdr.id);
+	reply->ttl          = ip->ip_ttl;
 	return (0);
 }
 
-int icmp_recv(t_icmp_pkt *pkt, t_ping_ctx *ctx)
+int icmp_recv(t_icmp_reply *reply, t_ping_ctx *ctx)
 {
-	char buf[IP_HDR_SIZE + sizeof(t_icmp_pkt)];
-	struct sockaddr_in from;
-	socklen_t fromlen;
-	ssize_t r;
+	char        buf[IP_HDR_SIZE + sizeof(t_icmp_pkt)];
+	socklen_t   fromlen;
+	ssize_t     r;
 
-	fromlen = sizeof(from);
+	fromlen = sizeof(reply->from);
 	r = recvfrom(ctx->sockfd, buf, sizeof(buf), 0,
-		     (struct sockaddr *)&from,
-	             &fromlen);
-	//gettimeofday(tv_recv, NULL);
+			(struct sockaddr *)&reply->from, &fromlen);
+	gettimeofday(&reply->tv_recv, NULL);
 	if (r == -1) {
 		perror("recvfrom()");
 		return (1);
 	}
-	return (icmp_parse(pkt, buf, (size_t)r));
+	return (icmp_parse(reply, buf, (size_t)r));
 }

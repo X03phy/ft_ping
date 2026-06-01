@@ -15,13 +15,13 @@ void print_header(const t_ping_ctx *ctx)
 	printf("ft_ping %s (%s): %d data bytes\n", ctx->hostname, ip, DATA_SIZE);
 }
 
-void print_response(t_ping_ctx *ctx, t_icmp_pkt *pkt, double rtt)
+void print_response(const t_icmp_reply *reply, double rtt)
 {
 	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
 		sizeof(t_icmp_pkt),
-		inet_ntoa(ctx->from.sin_addr),
-		pkt->hdr.seq,
-		ctx->ttl,
+		inet_ntoa(reply->from.sin_addr),
+		reply->pkt.hdr.seq,
+		reply->ttl,
 		rtt
 	);
 }

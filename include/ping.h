@@ -24,6 +24,13 @@ typedef struct t_icmp_pkt {
 	char data[DATA_SIZE];
 } t_icmp_pkt;
 
+typedef struct s_icmp_reply {
+    t_icmp_pkt pkt;
+    struct sockaddr_in from;
+    int ttl;
+    struct timeval tv_recv;
+} t_icmp_reply;
+
 typedef struct t_ping_ctx {
 	/* Args */
 	const char *progname;
@@ -69,11 +76,11 @@ t_icmp_pkt icmp_build(unsigned short seq);
 
 /* icmp/icmp_io.c */
 int icmp_send(const t_icmp_pkt *pkt, const t_ping_ctx *ctx);
-int icmp_recv(t_icmp_pkt *pkt, t_ping_ctx *ctx);
+int icmp_recv(t_icmp_reply *reply, t_ping_ctx *ctx);
 
 /* stats.c */
 void print_header(const t_ping_ctx *ctx);
-void print_response(t_ping_ctx *ctx, t_icmp_pkt *pkt, double rtt);
+void print_response(const t_icmp_reply *reply, double rtt);
 void print_stats(const t_ping_ctx *ctx);
 
 

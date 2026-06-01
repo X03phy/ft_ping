@@ -19,24 +19,26 @@ static void sig_handler(int dummy)
 static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 {
 	t_icmp_pkt pkt;
-	double rtt = 0;
+	t_icmp_reply reply;
+	struct timeval tv_send;
+	double rtt;
 
 	pkt = icmp_build(seq);
 	if (icmp_send(&pkt, ctx) != 0)
 		return (1);
 	ctx->sent++;
-	if (icmp_recv(&pkt, ctx) != 0)
+	if (icmp_recv(&reply, ctx) != 0)
 		return (0);
 	ctx->received++;
-	print_response(ctx, &pkt, rtt);
-	//memcpy(&tv_send, pkt.data, sizeof(tv_send));
-	//rtt = time_diff_ms(&tv_send, tv_recv);
-	//if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
-	//	ctx->rtt_min = rtt;
-	//if (rtt > ctx->rtt_max)
-	//	ctx->rtt_max = rtt;
-	//ctx->rtt_sum += rtt;
-	//ctx->rtt_sum_sq += rtt * rtt;
+	memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
+	rtt = time_diff_ms(&tv_send, &reply.tv_recv);
+	print_response(&reply, rtt);
+	if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
+		ctx->rtt_min = rtt;
+	if (rtt > ctx->rtt_max)
+		ctx->rtt_max = rtt;
+	ctx->rtt_sum += rtt;
+	ctx->rtt_sum_sq += rtt * rtt;
 	return (0);
 }
 
