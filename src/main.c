@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv)
 {
-	s_ping_ctx ctx;
+	t_ping_ctx ctx;
 
 	ping_init(&ctx);
 	if (parse_args(&ctx, argc, argv) != 0)

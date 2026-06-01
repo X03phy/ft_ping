@@ -29,7 +29,7 @@ static int resolve_host(struct sockaddr_in *addr, const char *hostname)
 	return (0);
 }
 
-int ping_setup(s_ping_ctx *ctx)
+int ping_setup(t_ping_ctx *ctx)
 {
 	struct timeval timeout;
 

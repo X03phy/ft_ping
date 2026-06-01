@@ -8,24 +8,26 @@
 
 #include <stdint.h> // uintX_t
 
+#define DATA_SIZE 56
+
 /* Structures */
-typedef struct s_icmp_hdr {
+typedef struct t_icmp_hdr {
 	uint8_t type;
 	uint8_t code;
 	uint16_t checksum;
 	uint16_t id;
 	uint16_t seq;
-} s_icmp_hdr;
+} t_icmp_hdr;
 
-typedef struct s_icmp_pkt {
-	s_icmp_hdr hdr;
+typedef struct t_icmp_pkt {
+	t_icmp_hdr hdr;
 	char data[DATA_SIZE];
-} s_icmp_pkt;
+} t_icmp_pkt;
 
-typedef struct s_ping_ctx {
+typedef struct t_ping_ctx {
 	/* Args */
 	const char *progname;
-	const char *host;
+	const char *hostname;
 
 	int ttl;
 	long long count;
@@ -43,7 +45,7 @@ typedef struct s_ping_ctx {
 	double rtt_max;
 	double rtt_sum;
 	double rtt_sum_sq;
-} s_ping_ctx;
+} t_ping_ctx;
 
 /* Macros */
 #define FLAG_VERBOSE (1 << 0)
@@ -60,29 +62,26 @@ void print_error(int errcode, const char *progname);
 void print_help(const char *progname);
 
 /* args.c */
-int parse_args(s_ping_ctx *ctx, int argc, char **argv);
+int parse_args(t_ping_ctx *ctx, int argc, char **argv);
 
 /* icmp/icmp.c */
-void icmp_build(s_icmp_pkt *pkt, unsigned short seq);
+t_icmp_pkt icmp_build(unsigned short seq);
 
 /* icmp/icmp_io.c */
-int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr);
-int icmp_recv(size_t *out, int sockfd, char *buf, size_t len, struct sockaddr_in *from, struct timeval *tv_recv);
+int icmp_send(const t_icmp_pkt *pkt, const t_ping_ctx *ctx);
+int icmp_recv(t_icmp_pkt *pkt, t_ping_ctx *ctx);
 
 /* stats.c */
-void print_header(const s_ping_ctx *ctx);
-void print_response(const char *buf, size_t r, const struct in_addr *in, double rtt);
-void print_stats(const s_ping_ctx *ctx);
+void print_header(const t_ping_ctx *ctx);
+void print_response(t_ping_ctx *ctx, t_icmp_pkt *pkt, double rtt);
+void print_stats(const t_ping_ctx *ctx);
 
 
 /* ping/init.c */
-void ping_init(s_ping_ctx *ctx);
-
-/* ping/ping.c */
-int ping_run(s_ping_ctx *ctx);
-
-/* ping/setup.c */
-int ping_setup(s_ping_ctx *ctx);
+void ping_cleanup(t_ping_ctx *ctx);
+void ping_init(t_ping_ctx *ctx);
+int ping_run(t_ping_ctx *ctx);
+int ping_setup(t_ping_ctx *ctx);
 
 /* time/time.c */
 double time_diff_ms(struct timeval *start, struct timeval *end);

@@ -7,39 +7,30 @@
 #include <string.h>
 #include <math.h>
 
-void print_header(const s_ping_ctx *ctx)
+void print_header(const t_ping_ctx *ctx)
 {
 	char ip[INET_ADDRSTRLEN];
 
 	inet_ntop(AF_INET, &ctx->addr.sin_addr, ip, sizeof(ip));
-	printf("PING %s (%s): %d data bytes\n", ctx->host, ip, DATA_SIZE);
+	printf("ft_ping %s (%s): %d data bytes\n", ctx->hostname, ip, DATA_SIZE);
 }
 
-//void print_response(char *buf, size_t r, struct in_addr *in, double rtt)
-//{
-//	s_icmp_pkt *pkt;
-//	size_t size;
-//	struct ip *ip;
+void print_response(t_ping_ctx *ctx, t_icmp_pkt *pkt, double rtt)
+{
+	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
+		sizeof(t_icmp_pkt),
+		inet_ntoa(ctx->from.sin_addr),
+		pkt->hdr.seq,
+		ctx->ttl,
+		rtt
+	);
+}
 
-//	ip = (struct ip *)buf;
-//	size = (ip->ip_hl * 4);
-//	pkt = (s_icmp_pkt *)(buf + size);
-//	size = r - size;
-
-//	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
-//		size,
-//		inet_ntoa(from->sin_addr),
-//		ntohs(pkt->hdr.seq),
-//		ip->ip_ttl,
-//		rtt
-//	);
-//}
-
-void print_stats(const s_ping_ctx *ctx)
+void print_stats(const t_ping_ctx *ctx)
 {
 	double avg, loss, stddev;
 
-	printf("\n--- %s ping statistics ---\n", ctx->host);
+	printf("\n--- %s ping statistics ---\n", ctx->hostname);
 
 	loss = (ctx->sent != 0) ? ((ctx->sent - ctx->received) * 100.0) / ctx->sent : 0;
 	printf("%u packets transmitted, %u packets received, %.1f%% packet loss\n", ctx->sent, ctx->received, loss);

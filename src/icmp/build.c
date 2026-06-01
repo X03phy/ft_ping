@@ -7,7 +7,7 @@
 #include <stddef.h> // NULL, size_t
 #include <string.h> // memcpy(), memset()
 
-static void icmp_init_hdr(s_icmp_hdr *hdr, unsigned short seq)
+static void icmp_init_hdr(t_icmp_hdr *hdr, unsigned short seq)
 {
 	hdr->type = ICMP_ECHO;
 	hdr->code = 0;
@@ -42,10 +42,13 @@ static unsigned short icmp_checksum(void *data, size_t len) //! recheck
 	return (~sum);
 }
 
-void icmp_build(s_icmp_pkt *pkt, unsigned short seq)
+t_icmp_pkt icmp_build(unsigned short seq)
 {
-	memset(pkt, 0, sizeof(*pkt));
-	icmp_init_hdr(&pkt->hdr, seq);
-	icmp_fill_data_with_time(pkt->data);
-	pkt->hdr.checksum = icmp_checksum(pkt, sizeof(*pkt));
+	t_icmp_pkt pkt;
+
+	memset(&pkt, 0, sizeof(pkt));
+	icmp_init_hdr(&pkt.hdr, seq);
+	icmp_fill_data_with_time(pkt.data);
+	pkt.hdr.checksum = icmp_checksum(&pkt, sizeof(pkt));
+	return (pkt);
 }
