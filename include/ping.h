@@ -6,14 +6,7 @@
 #include <netinet/ip_icmp.h> // struct icmp
 #include <sys/time.h> // struct timeval
 
-/* Macros */
-#define PING_FLAG_VERBOSE (1 << 0)
-
-#define PING_DEFAULT_INTERVAL 1.0
-// #define PING_DEFAULT
-
-#define DATA_SIZE 56
-#define IP_HDR_SIZE 20
+#include <stdint.h> // uintX_t
 
 /* Structures */
 typedef struct s_icmp_hdr {
@@ -52,6 +45,15 @@ typedef struct s_ping_ctx {
 	double rtt_sum_sq;
 } s_ping_ctx;
 
+/* Macros */
+#define FLAG_VERBOSE (1 << 0)
+
+#define DEFAULT_INTERVAL 1.0
+// #define PING_DEFAULT
+
+#define DATA_SIZE 56
+#define IP_HDR_SIZE 20
+
 /* Functions */
 /* error.c */
 void print_error(int errcode, const char *progname);
@@ -59,9 +61,6 @@ void print_help(const char *progname);
 
 /* args.c */
 int parse_args(s_ping_ctx *ctx, int argc, char **argv);
-
-/* net.c */
-int ping_setup(s_ping_ctx *ctx);
 
 /* icmp/icmp.c */
 void icmp_build(s_icmp_pkt *pkt, unsigned short seq);
@@ -76,7 +75,16 @@ void print_response(const char *buf, size_t r, const struct in_addr *in, double 
 void print_stats(const s_ping_ctx *ctx);
 
 
-/* ping.c */
+/* ping/init.c */
+void ping_init(s_ping_ctx *ctx);
+
+/* ping/ping.c */
 int ping_run(s_ping_ctx *ctx);
+
+/* ping/setup.c */
+int ping_setup(s_ping_ctx *ctx);
+
+/* time/time.c */
+double time_diff_ms(struct timeval *start, struct timeval *end);
 
 #endif

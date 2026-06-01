@@ -18,12 +18,10 @@ int icmp_send(s_icmp_pkt *pkt, int sockfd, struct sockaddr_in *addr)
 		perror("sendto()");
 		return (1);
 	}
-
 	if ((size_t)ret != sizeof(*pkt)) {
 		dprintf(2, "partial send\n"); //! Modify error message
 		return (1);
 	}
-
 	return (0);
 }
 
@@ -40,8 +38,6 @@ int icmp_recv(size_t *out, int sockfd, char *buf, size_t len,
 		perror("recvfrom()");
 		return (1);
 	}
-
 	*out = (size_t)r;
-
 	return (0);
 }
