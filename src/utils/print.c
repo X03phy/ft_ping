@@ -32,8 +32,8 @@ void print_stats(const t_ping_ctx *ctx)
 
 	printf("\n--- %s ping statistics ---\n", ctx->hostname);
 
-	loss = (ctx->sent != 0) ? ((ctx->sent - ctx->received) * 100.0) / ctx->sent : 0;
-	printf("%u packets transmitted, %u packets received, %.1f%% packet loss\n", ctx->sent, ctx->received, loss);
+	loss = (ctx->send != 0) ? ((ctx->send - ctx->received) * 100.0) / ctx->send : 0;
+	printf("%u packets transmitted, %u packets received, %.1f%% packet loss\n", ctx->send, ctx->received, loss);
 
 	if (ctx->received != 0) {
 		avg = (ctx->received != 0) ? ctx->rtt_sum / ctx-> received : 0;

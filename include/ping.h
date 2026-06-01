@@ -46,7 +46,7 @@ typedef struct t_ping_ctx {
 	struct sockaddr_in addr;
 
 	/* Stats */
-	unsigned int sent;
+	unsigned int send;
 	unsigned int received;
 	double rtt_min;
 	double rtt_max;

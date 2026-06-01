@@ -1,12 +1,12 @@
 #include "ping.h"
 
-#include <signal.h> // SIGINT, signal()
+#include <signal.h> // struct sigaction, SIGINT, sigaction(), sigemptyset()
+#include <sys/time.h> // struct timeval
 
-#include <unistd.h> // close()
+#include <unistd.h> // usleep()
 #include <stddef.h> // NULL
+#include <stdio.h> // perror()
 #include <string.h> // memset()
-#include <netdb.h> // struct addrinfo
-#include <stdio.h> // dprintf()
 
 int g_pingloop = 1;
 
@@ -26,7 +26,7 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	pkt = icmp_build(seq);
 	if (icmp_send(&pkt, ctx) != 0)
 		return (1);
-	ctx->sent++;
+	ctx->send++;
 	if (icmp_recv(&reply, ctx) != 0)
 		return (0);
 	ctx->received++;
@@ -45,7 +45,6 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 static int ping_loop(t_ping_ctx *ctx)
 {
 	unsigned short seq;
-	//struct timeval tv_recv;
 
 	seq = 0;
 	while (g_pingloop) {
@@ -54,7 +53,7 @@ static int ping_loop(t_ping_ctx *ctx)
 		seq++;
 		if (ctx->count != -1 && seq >= (unsigned short)ctx->count)
 			break ;
-		sleep((unsigned int)ctx->interval);
+		sleep((unsigned int)ctx->interval); //TODO Replace with usleep()
 	}
 	return (0);
 }
@@ -62,10 +61,17 @@ static int ping_loop(t_ping_ctx *ctx)
 int ping_run(t_ping_ctx *ctx)
 {
 	int ret;
+	struct sigaction sa;
 
+	sa.sa_handler = sig_handler;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGINT, &sa, NULL) == -1) {
+		perror("sigaction()");
+		return (1);
+	}
 	if (ping_setup(ctx) != 0)
 		return (1);
-	signal(SIGINT, sig_handler); //! can fail -> to secure AND SIGNAL NOT RECOMMENDED
 	print_header(ctx);
 	ret = ping_loop(ctx);
 	print_stats(ctx);
