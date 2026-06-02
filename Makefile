@@ -1,13 +1,16 @@
 NAME := ft_ping
 
 CC := cc
+
 CFLAGS := -Wall -Wextra -Werror
+CPPFLAGS := -Iinclude -MMD -MP
+
+LDFLAGS := 
+LDLIBS := $(addprefix -l, m)
 
 SRC_DIR := src
 INC_DIR := include
 BUILD_DIR := .build
-
-CPPFLAGS := -I$(INC_DIR) -MMD -MP
 
 SRCS := $(shell find $(SRC_DIR) -type f -name "*.c")
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
@@ -21,7 +24,7 @@ DOCKER_FLAGS := --cap-add=NET_RAW --rm -it -v $(shell pwd):/app -w /app
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $^ -o $@ -lm
+	$(CC) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(@D)
