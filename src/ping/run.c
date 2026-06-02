@@ -72,7 +72,7 @@ static int ping_loop(t_ping_ctx *ctx)
 		if (ctx->count != -1 && seq >= (unsigned short)ctx->count)
 			break ;
 		gettimeofday(&tv_after, NULL);
-		elapsed_us = (tv_after.tv_sec  - tv_before.tv_sec)  * 1000000L
+		elapsed_us = (tv_after.tv_sec  - tv_before.tv_sec) * 1000000L
 		             + (tv_after.tv_usec - tv_before.tv_usec);
 		wait_us = (long)(ctx->interval * 1000000L) - elapsed_us;
 		if (wait_us > 0)
