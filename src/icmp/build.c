@@ -2,9 +2,10 @@
 
 #include <arpa/inet.h> // htons()
 #include <netinet/ip_icmp.h> // ICMP_ECHO
-#include <sys/time.h> // struct timeval, gettimeofday()
 
+#include <sys/time.h> // struct timeval, gettimeofday()
 #include <unistd.h> // getpid()
+
 #include <stddef.h> // NULL, size_t
 #include <string.h> // memcpy(), memset()
 

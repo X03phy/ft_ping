@@ -6,8 +6,8 @@
 #include <netinet/ip.h> // IPPROTO_IP, IP_TTL
 #include <sys/socket.h> // AF_INET, IPPROTO_ICMP, SOCK_RAW, SOL_SOCKET,
                         // SO_RCVTIMEO, setsockopt(), socket()
-#include <sys/time.h> // struct timeval, suseconds_t
 
+#include <sys/time.h> // struct timeval, suseconds_t
 #include <unistd.h> // close()
 
 #include <stddef.h> // NULL

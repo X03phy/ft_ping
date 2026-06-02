@@ -3,13 +3,14 @@
 #include <arpa/inet.h> // ntohs()
 #include <netinet/ip_icmp.h> // struct ip, ICMP_ECHOREPLY
 #include <sys/socket.h> // struct sockaddr, recvfrom(), sendto()
+
 #include <sys/time.h> // gettimeofday()
 #include <sys/types.h> // ssize_t
+#include <unistd.h> // getpid()
 
 #include <stddef.h> // size_t, NULL
 #include <stdint.h> // uintX_t
 #include <stdio.h> // perror()
-#include <unistd.h> // getpid()
 
 int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt)
 {
