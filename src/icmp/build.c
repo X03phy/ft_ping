@@ -1,6 +1,7 @@
 #include "ping.h"
 
 #include <arpa/inet.h> // htons()
+#include <netinet/ip_icmp.h> // ICMP_ECHO
 #include <sys/time.h> // struct timeval, gettimeofday()
 
 #include <unistd.h> // getpid()
@@ -19,7 +20,7 @@ static void icmp_fill_data_with_time(char *data)
 {
 	struct timeval tv;
 
-	gettimeofday(&tv, NULL); /* Cannot fail if used properly */
+	gettimeofday(&tv, NULL);
 	memcpy(data, &tv, sizeof(tv));
 	memset(data + sizeof(tv), 0, DATA_SIZE - sizeof(tv));
 }
@@ -27,7 +28,7 @@ static void icmp_fill_data_with_time(char *data)
 static unsigned short icmp_checksum(void *data, size_t len) //! recheck
 {
 	unsigned short *buf;
-	unsigned int   sum;
+	unsigned int sum;
 
 	buf = data;
 	sum = 0;
