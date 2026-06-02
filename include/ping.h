@@ -8,7 +8,13 @@
 
 #include <stdint.h> // uintX_t
 
+/* Macros */
 #define DATA_SIZE 56
+
+#define FLAG_VERBOSE (1 << 0)
+#define FLAG_HELP (1 << 1)
+
+#define DEFAULT_INTERVAL 1.0
 
 /* Structures */
 typedef struct t_icmp_hdr {
@@ -53,15 +59,6 @@ typedef struct t_ping_ctx {
 	double rtt_sum;
 	double rtt_sum_sq;
 } t_ping_ctx;
-
-/* Macros */
-#define FLAG_VERBOSE (1 << 0)
-
-#define DEFAULT_INTERVAL 1.0
-// #define PING_DEFAULT
-
-#define DATA_SIZE 56
-#define IP_HDR_SIZE 20
 
 /* Functions */
 /* error.c */

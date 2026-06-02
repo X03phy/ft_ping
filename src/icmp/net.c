@@ -30,7 +30,7 @@ static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len)
 	struct ip *ip;
 	t_icmp_pkt *recv_pkt;
 
-	if (len < IP_HDR_SIZE + sizeof(t_icmp_pkt))
+	if (len < sizeof(struct ip) + sizeof(t_icmp_pkt))
 		return (1);
 	ip = (struct ip *)buf;
 	recv_pkt = (t_icmp_pkt *)(buf + ip->ip_hl * 4);
@@ -46,7 +46,7 @@ static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len)
 
 int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply)
 {
-	char buf[IP_HDR_SIZE + sizeof(t_icmp_pkt)];
+	char buf[sizeof(struct ip) + sizeof(t_icmp_pkt)];
 	socklen_t fromlen;
 	ssize_t r;
 

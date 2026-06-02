@@ -64,7 +64,6 @@ static int ping_loop(t_ping_ctx *ctx)
 		wait_us = (long)(ctx->interval * 1000000L) - elapsed_us;
 		if (wait_us > 0)
 			usleep((useconds_t)wait_us);
-		printf("%ld\n", wait_us);
 	}
 	return (0);
 }

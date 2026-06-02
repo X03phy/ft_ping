@@ -1,11 +1,10 @@
 #include "ping.h"
 
-#include <arpa/inet.h> // inet_ntop()
-#include <stdio.h> // print()
-#include <sys/time.h>
-#include <unistd.h>
-#include <string.h>
-#include <math.h>
+#include <arpa/inet.h> // INET_ADDRSTRLEN, inet_ntoa(), inet_ntop()
+#include <sys/socket.h> // AF_INET
+
+#include <stdio.h> // printf()
+#include <math.h> // sqrt()
 
 void print_help(const char *progname)
 {
@@ -34,32 +33,34 @@ void print_header(const t_ping_ctx *ctx)
 	char ip[INET_ADDRSTRLEN];
 
 	inet_ntop(AF_INET, &ctx->addr.sin_addr, ip, sizeof(ip));
-	printf("ft_ping %s (%s): %d data bytes\n", ctx->hostname, ip, DATA_SIZE);
+	printf("ping %s (%s): %d data bytes\n",
+	       ctx->hostname, ip, DATA_SIZE);
 }
 
 void print_response(const t_icmp_reply *reply, double rtt)
 {
 	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
-		sizeof(t_icmp_pkt),
-		inet_ntoa(reply->from.sin_addr),
-		reply->pkt.hdr.seq,
-		reply->ttl,
-		rtt
-	);
+	       sizeof(t_icmp_pkt), inet_ntoa(reply->from.sin_addr),
+	       reply->pkt.hdr.seq, reply->ttl, rtt);
 }
 
 void print_stats(const t_ping_ctx *ctx)
 {
-	double avg, loss, stddev;
+	double loss;
+	double avg;
+	double stddev;
 
+	loss = 0.0;
+	if (ctx->send != 0)
+		loss = ((ctx->send - ctx->received) * 100.0) / ctx->send;
 	printf("\n--- %s ping statistics ---\n", ctx->hostname);
-
-	loss = (ctx->send != 0) ? ((ctx->send - ctx->received) * 100.0) / ctx->send : 0;
-	printf("%u packets transmitted, %u packets received, %.1f%% packet loss\n", ctx->send, ctx->received, loss);
-
-	if (ctx->received != 0) {
-		avg = (ctx->received != 0) ? ctx->rtt_sum / ctx-> received : 0;
-		stddev = (ctx->received != 0) ? sqrt(ctx->rtt_sum_sq / ctx->received - avg * avg) : 0;
-		printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", ctx->rtt_min, avg, ctx->rtt_max, stddev);
-	}
+	printf("%u packets transmitted, ", ctx->send);
+	printf("%u packets received, ", ctx->received);
+	printf("%.1f%% packet loss\n", loss);
+	if (ctx->received == 0)
+		return ;
+	avg = ctx->rtt_sum / ctx-> received;
+	stddev = sqrt(ctx->rtt_sum_sq / ctx->received - avg * avg);
+	printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
+	       ctx->rtt_min, avg, ctx->rtt_max, stddev);
 }
