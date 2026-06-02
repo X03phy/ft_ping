@@ -2,8 +2,8 @@
 
 #include <signal.h> // struct sigaction, SIGINT, sigaction(), sigemptyset()
 #include <sys/time.h> // struct timeval
-
 #include <unistd.h> // usleep()
+
 #include <stddef.h> // NULL
 #include <stdio.h> // perror()
 #include <string.h> // memset()
@@ -24,10 +24,10 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	double rtt;
 
 	pkt = icmp_build(seq);
-	if (icmp_send(&pkt, ctx) != 0)
+	if (icmp_send(ctx, &pkt) != 0)
 		return (1);
 	ctx->send++;
-	if (icmp_recv(&reply, ctx) != 0)
+	if (icmp_recv(ctx, &reply) != 0)
 		return (0);
 	ctx->received++;
 	memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
@@ -60,7 +60,7 @@ static int ping_loop(t_ping_ctx *ctx)
 			break ;
 		gettimeofday(&tv_after, NULL);
 		elapsed_us = (tv_after.tv_sec  - tv_before.tv_sec)  * 1000000L
-		           + (tv_after.tv_usec - tv_before.tv_usec);
+		             + (tv_after.tv_usec - tv_before.tv_usec);
 		wait_us = (long)(ctx->interval * 1000000L) - elapsed_us;
 		if (wait_us > 0)
 			usleep((useconds_t)wait_us);
@@ -74,15 +74,16 @@ int ping_run(t_ping_ctx *ctx)
 	int ret;
 	struct sigaction sa;
 
+	if (ping_setup(ctx) != 0)
+		return (1);
 	sa.sa_handler = sig_handler;
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);
 	if (sigaction(SIGINT, &sa, NULL) == -1) {
 		perror("sigaction()");
+		ping_cleanup(ctx);
 		return (1);
 	}
-	if (ping_setup(ctx) != 0)
-		return (1);
 	print_header(ctx);
 	ret = ping_loop(ctx);
 	print_stats(ctx);

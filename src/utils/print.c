@@ -7,6 +7,28 @@
 #include <string.h>
 #include <math.h>
 
+void print_help(const char *progname)
+{
+	printf("Usage:\n");
+	printf("  %s [options] hostname\n", progname);
+	printf("\n");
+	printf("Options:\n");
+	printf("  -v\n");
+	printf("  -h, -?\n");
+	printf("  -f\n");
+	printf("  -l\n");
+	printf("  -n\n");
+	printf("  -w\n");
+	printf("  -W\n");
+	printf("  -p\n");
+	printf("  -r\n");
+	printf("  -s\n");
+	printf("  -T\n");
+	printf("  --ttl\n");
+	printf("  --ip-timestamp\n");
+	printf("\n");
+}
+
 void print_header(const t_ping_ctx *ctx)
 {
 	char ip[INET_ADDRSTRLEN];

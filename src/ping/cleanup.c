@@ -4,6 +4,5 @@
 
 void ping_cleanup(t_ping_ctx *ctx)
 {
-	if (ctx->sockfd != -1)
-		close(ctx->sockfd);	
+	close(ctx->sockfd);
 }

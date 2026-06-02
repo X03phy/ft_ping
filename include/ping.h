@@ -3,7 +3,6 @@
 
 /* Includes */
 #include <netinet/in.h> // struct sockaddr_in
-#include <netinet/ip_icmp.h> // struct icmp
 #include <sys/time.h> // struct timeval
 
 #include <stdint.h> // uintX_t
@@ -75,8 +74,8 @@ int parse_args(t_ping_ctx *ctx, int argc, char **argv);
 t_icmp_pkt icmp_build(unsigned short seq);
 
 /* icmp/icmp_io.c */
-int icmp_send(const t_icmp_pkt *pkt, const t_ping_ctx *ctx);
-int icmp_recv(t_icmp_reply *reply, t_ping_ctx *ctx);
+int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt);
+int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply);
 
 /* stats.c */
 void print_header(const t_ping_ctx *ctx);
