@@ -8,6 +8,7 @@
 #include <sys/types.h> // ssize_t
 #include <unistd.h> // getpid()
 
+#include <errno.h> // EAGAIN, EINTR, EWOULDBLOCK, errno
 #include <stddef.h> // size_t, NULL
 #include <stdint.h> // uintX_t
 #include <stdio.h> // perror()
@@ -56,6 +57,9 @@ int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply)
 		(struct sockaddr *)&reply->from, &fromlen);
 		gettimeofday(&reply->tv_recv, NULL);
 		if (r == -1) {
+			if (errno == EAGAIN || errno == EWOULDBLOCK
+			    || errno == EINTR)
+				return (1);
 			perror("recvfrom()");
 			return (1);
 		}
