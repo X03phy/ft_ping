@@ -54,7 +54,7 @@ int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply)
 	while (1) {
 		fromlen = sizeof(reply->from);
 		r = recvfrom(ctx->sockfd, buf, sizeof(buf), 0,
-		(struct sockaddr *)&reply->from, &fromlen);
+		             (struct sockaddr *)&reply->from, &fromlen);
 		gettimeofday(&reply->tv_recv, NULL);
 		if (r == -1) {
 			if (errno == EAGAIN || errno == EWOULDBLOCK

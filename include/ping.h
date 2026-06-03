@@ -19,6 +19,7 @@
 #define FLAG_DEADLINE (1 << 4) // -w
 #define FLAG_TIMEOUT (1 << 4) // -W
 #define FLAG_PATTERN (1 << 0) // -p, --pattern
+#define FLAG_IGNORE_ROUTING (1 << 0) // -p, --pattern
 
 #define DEFAULT_INTERVAL 1.0
 
@@ -92,7 +93,8 @@ int parse_args(t_ping_ctx *ctx, int argc, char **argv);
 /* utils/print.c */
 void print_help(const char *progname);
 void print_header(const t_ping_ctx *ctx);
-void print_response(const t_icmp_reply *reply, double rtt);
+void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
+                    double rtt);
 void print_stats(const t_ping_ctx *ctx);
 
 #endif

@@ -45,8 +45,12 @@ void print_header(const t_ping_ctx *ctx)
 	printf("\n");
 }
 
-void print_response(const t_icmp_reply *reply, double rtt)
+void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply, double rtt)
 {
+	if (ctx->flags & FLAG_FLOOD) {
+		printf("\b \b");
+		return ;
+	}
 	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
 	       sizeof(t_icmp_pkt), inet_ntoa(reply->from.sin_addr),
 	       reply->pkt.hdr.seq, reply->ttl, rtt);

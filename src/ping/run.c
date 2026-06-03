@@ -5,7 +5,7 @@
 #include <unistd.h> // usleep()
 
 #include <stddef.h> // NULL
-#include <stdio.h> // perror()
+#include <stdio.h> // perror(), printf()
 #include <string.h> // memset()
 
 int g_pingloop = 1;
@@ -40,12 +40,14 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	if (icmp_send(ctx, &pkt) != 0)
 		return (1);
 	ctx->send++;
+	if (ctx->flags & FLAG_FLOOD)
+		printf(".");
 	if (icmp_recv(ctx, &reply) != 0)
 		return (0);
 	ctx->received++;
 	memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
 	rtt = time_diff_ms(&tv_send, &reply.tv_recv);
-	print_response(&reply, rtt);
+	print_response(ctx, &reply, rtt);
 	if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
 		ctx->rtt_min = rtt;
 	if (rtt > ctx->rtt_max)
