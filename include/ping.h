@@ -16,7 +16,7 @@
 #define FLAG_FLOOD (1 << 2) // -f
 #define FLAG_PRELOAD (1 << 3) // -l
 #define FLAG_NUMERIC (1 << 4) // -n
-#define FLAG_DEADLINE (1 << 4) // -w
+#define FLAG_DEADLINE (1 << 5) // -w
 #define FLAG_TIMEOUT (1 << 4) // -W
 #define FLAG_PATTERN (1 << 0) // -p, --pattern
 #define FLAG_IGNORE_ROUTING (1 << 0) // -p, --pattern
@@ -48,11 +48,11 @@ typedef struct t_ping_ctx {
 	/* Args */
 	const char *progname;
 	const char *hostname;
-
 	int ttl;
 	long long count;
 	double interval;
 	unsigned long flags;
+	int timeout;
 
 	/* Socket */
 	int sockfd;

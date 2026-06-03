@@ -12,3 +12,17 @@ TODO:
 - Init
 - Erreurs
 - Display
+
+
+TODO :
+-f -> fix bug amazon.com
+-l
+-n -> inutile ??
+-w ->
+-W
+-p
+-r
+-s
+-T
+--ttl
+--ip-timestamp

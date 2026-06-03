@@ -3,6 +3,8 @@
 #include <stdio.h> // dprintf()
 #include <string.h> // strcmp()
 
+#include <stdlib.h> // atoi(); //! To change
+
 static int parse_hostname(t_ping_ctx *ctx, char *arg)
 {
 	if (!ctx->hostname) {
@@ -23,6 +25,11 @@ static int parse_flag(t_ping_ctx *ctx, int argc, char **argv, int *i)
 	else if (strcmp(argv[*i], "-f") == 0 || strcmp(argv[*i], "--flood") == 0) {
 		ctx->flags |= FLAG_FLOOD;
 		ctx->interval = 0.0;
+	}
+	else if (strcmp(argv[*i], "-w") == 0 || strcmp(argv[*i], "--timeout") == 0) {
+		ctx->flags |= FLAG_TIMEOUT;
+		(*i)++;
+		ctx->timeout = atoi(argv[*i]);
 	}
 	else if (strcmp(argv[*i], "-n") == 0 || strcmp(argv[*i], "--numeric") == 0)
 		ctx->flags |= FLAG_NUMERIC;
