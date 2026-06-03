@@ -25,7 +25,7 @@ int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt)
 	return (0);
 }
 
-static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len)
+static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len) //! Add expected seq
 {
 	struct ip *ip;
 	t_icmp_pkt *recv_pkt;
@@ -50,13 +50,16 @@ int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply)
 	socklen_t fromlen;
 	ssize_t r;
 
-	fromlen = sizeof(reply->from);
-	r = recvfrom(ctx->sockfd, buf, sizeof(buf), 0,
-	             (struct sockaddr *)&reply->from, &fromlen);
-	gettimeofday(&reply->tv_recv, NULL);
-	if (r == -1) {
-		perror("recvfrom()");
-		return (1);
+	while (1) {
+		fromlen = sizeof(reply->from);
+		r = recvfrom(ctx->sockfd, buf, sizeof(buf), 0,
+		(struct sockaddr *)&reply->from, &fromlen);
+		gettimeofday(&reply->tv_recv, NULL);
+		if (r == -1) {
+			perror("recvfrom()");
+			return (1);
+		}
+		if (icmp_parse(reply, buf, (size_t)r) == 0)
+			return (0);
 	}
-	return (icmp_parse(reply, buf, (size_t)r));
 }

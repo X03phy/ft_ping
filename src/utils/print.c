@@ -3,6 +3,8 @@
 #include <arpa/inet.h> // INET_ADDRSTRLEN, inet_ntoa(), inet_ntop()
 #include <sys/socket.h> // AF_INET
 
+#include <unistd.h> // getpid()
+
 #include <stdio.h> // printf()
 #include <math.h> // sqrt()
 
@@ -31,10 +33,16 @@ void print_help(const char *progname)
 void print_header(const t_ping_ctx *ctx)
 {
 	char ip[INET_ADDRSTRLEN];
+	pid_t pid;
 
 	inet_ntop(AF_INET, &ctx->addr.sin_addr, ip, sizeof(ip));
-	printf("ping %s (%s): %d data bytes\n",
+	printf("ping %s (%s): %d data bytes",
 	       ctx->hostname, ip, DATA_SIZE);
+	if (ctx->flags & FLAG_VERBOSE) {
+		pid = getpid();
+		printf(", id 0x%04x = %d", (uint16_t)(pid & 0xFFFF), (uint16_t)(pid & 0xFFFF));
+	}
+	printf("\n");
 }
 
 void print_response(const t_icmp_reply *reply, double rtt)

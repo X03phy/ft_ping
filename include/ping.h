@@ -11,8 +11,14 @@
 /* Macros */
 #define DATA_SIZE 56
 
-#define FLAG_VERBOSE (1 << 0)
-#define FLAG_HELP (1 << 1)
+#define FLAG_VERBOSE (1 << 0) // -v, --verbose
+#define FLAG_HELP (1 << 1) // -h, -?, --help
+#define FLAG_FLOOD (1 << 2) // -f
+#define FLAG_PRELOAD (1 << 3) // -l
+#define FLAG_NUMERIC (1 << 4) // -n
+#define FLAG_DEADLINE (1 << 4) // -w
+#define FLAG_TIMEOUT (1 << 4) // -W
+#define FLAG_PATTERN (1 << 0) // -p, --pattern
 
 #define DEFAULT_INTERVAL 1.0
 

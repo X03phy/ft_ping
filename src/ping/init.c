@@ -16,4 +16,6 @@ void ping_init(t_ping_ctx *ctx)
 	ctx->rtt_max  = -1.0;
 	ctx->rtt_sum  = 0.0;
 	ctx->rtt_sum_sq = 0.0;
+	ctx->flags = 0;
+	ctx->flags |= FLAG_VERBOSE;
 }
