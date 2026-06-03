@@ -1,7 +1,7 @@
 #include "ping.h"
 
 #include <signal.h> // struct sigaction, SIGINT, sigaction(), sigemptyset()
-#include <sys/time.h> // struct timeval
+#include <sys/time.h> // struct timeval, gettimeofday()
 #include <unistd.h> // usleep()
 
 #include <stddef.h> // NULL
