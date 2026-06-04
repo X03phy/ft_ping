@@ -40,7 +40,8 @@ void print_header(const t_ping_ctx *ctx)
 	       ctx->hostname, ip, DATA_SIZE);
 	if (ctx->flags & FLAG_VERBOSE) {
 		pid = getpid();
-		printf(", id 0x%04x = %d", (uint16_t)(pid & 0xFFFF), (uint16_t)(pid & 0xFFFF));
+		printf(", id 0x%04x = %d", (uint16_t)(pid & 0xFFFF),
+		       (uint16_t)(pid & 0xFFFF));
 	}
 	printf("\n");
 }
