@@ -1,11 +1,10 @@
 #include "ping.h"
 
 #include <sys/time.h> // struct timeval, gettimeofday()
-#include <unistd.h> // usleep()
 
 #include <stddef.h> // NULL
-#include <stdio.h> // perror(), printf()
-#include <string.h> // memset()
+#include <stdio.h> // printf()
+#include <string.h> // memcpy()
 
 static void update_rtt(t_ping_ctx *ctx, int rtt)
 {
@@ -45,8 +44,6 @@ static int ping_loop(t_ping_ctx *ctx)
 	unsigned short seq;
 	struct timeval tv_before;
 	struct timeval tv_after;
-	long elapsed_us;
-	long wait_us;
 
 	seq = 0;
 	while (g_pingloop) {
@@ -57,11 +54,7 @@ static int ping_loop(t_ping_ctx *ctx)
 		if (ctx->count != -1 && seq >= (unsigned short)ctx->count)
 			break ;
 		gettimeofday(&tv_after, NULL);
-		elapsed_us = (tv_after.tv_sec  - tv_before.tv_sec) * 1000000L
-		             + (tv_after.tv_usec - tv_before.tv_usec);
-		wait_us = (long)(ctx->interval * 1000000L) - elapsed_us;
-		if (wait_us > 0)
-			usleep((useconds_t)wait_us);
+		wait_remaining_time(ctx, &tv_before, &tv_after);
 	}
 	return (0);
 }

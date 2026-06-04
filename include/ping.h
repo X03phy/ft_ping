@@ -95,6 +95,10 @@ int signal_setup(void);
 /* time/diff.c */
 double time_diff_ms(struct timeval *start, struct timeval *end);
 
+/* time.wait.c */
+void wait_remaining_time(t_ping_ctx *ctx, struct timeval *before,
+                         struct timeval *after);
+
 /* utils/args.c */
 int parse_args(t_ping_ctx *ctx, int argc, char **argv);
 
