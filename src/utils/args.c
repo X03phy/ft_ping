@@ -24,7 +24,7 @@ static int parse_flag(t_ping_ctx *ctx, int argc, char **argv, int *i)
 		ctx->flags |= FLAG_VERBOSE;
 	else if (strcmp(argv[*i], "-f") == 0 || strcmp(argv[*i], "--flood") == 0) {
 		ctx->flags |= FLAG_FLOOD;
-		ctx->interval = 0.0;
+		ctx->interval = 0.01;
 	}
 	else if (strcmp(argv[*i], "-w") == 0 || strcmp(argv[*i], "--timeout") == 0) {
 		ctx->flags |= FLAG_TIMEOUT;
