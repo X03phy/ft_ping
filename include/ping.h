@@ -67,6 +67,8 @@ typedef struct t_ping_ctx {
 	double rtt_sum_sq;
 } t_ping_ctx;
 
+extern int g_pingloop;
+
 /* Prototypes */
 /* icmp/build.c */
 t_icmp_pkt icmp_build(unsigned short seq);
@@ -86,6 +88,12 @@ int ping_run(t_ping_ctx *ctx);
 
 /* ping/cleanup.c */
 void ping_cleanup(t_ping_ctx *ctx);
+
+/* signal/setup.c */
+int signal_setup(void);
+
+/* time/diff.c */
+double time_diff_ms(struct timeval *start, struct timeval *end);
 
 /* utils/args.c */
 int parse_args(t_ping_ctx *ctx, int argc, char **argv);

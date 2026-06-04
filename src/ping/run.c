@@ -1,6 +1,5 @@
 #include "ping.h"
 
-#include <signal.h> // struct sigaction, SIGINT, sigaction(), sigemptyset()
 #include <sys/time.h> // struct timeval, gettimeofday()
 #include <unistd.h> // usleep()
 
@@ -8,25 +7,14 @@
 #include <stdio.h> // perror(), printf()
 #include <string.h> // memset()
 
-int g_pingloop = 1;
-
-static void sig_handler(int dummy)
+static void update_rtt(t_ping_ctx *ctx, int rtt)
 {
-	(void)dummy;
-	g_pingloop = 0;
-}
-
-static double time_diff_ms(struct timeval *start, struct timeval *end)
-{
-	struct timeval tmp;
-
-	tmp.tv_sec = end->tv_sec - start->tv_sec;
-	tmp.tv_usec = end->tv_usec - start->tv_usec;
-	if (tmp.tv_usec < 0) {
-		tmp.tv_sec -= 1;
-		tmp.tv_usec += 1000000;
-	}
-	return (tmp.tv_sec * 1000.0 + tmp.tv_usec / 1000.0);
+	if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
+		ctx->rtt_min = rtt;
+	if (rtt > ctx->rtt_max)
+		ctx->rtt_max = rtt;
+	ctx->rtt_sum += rtt;
+	ctx->rtt_sum_sq += rtt * rtt;
 }
 
 static int ping_once(t_ping_ctx *ctx, unsigned short seq)
@@ -48,12 +36,7 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
 	rtt = time_diff_ms(&tv_send, &reply.tv_recv);
 	print_response(ctx, &reply, rtt);
-	if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
-		ctx->rtt_min = rtt;
-	if (rtt > ctx->rtt_max)
-		ctx->rtt_max = rtt;
-	ctx->rtt_sum += rtt;
-	ctx->rtt_sum_sq += rtt * rtt;
+	update_rtt(ctx, rtt);
 	return (0);
 }
 
@@ -86,15 +69,10 @@ static int ping_loop(t_ping_ctx *ctx)
 int ping_run(t_ping_ctx *ctx)
 {
 	int ret;
-	struct sigaction sa;
 
 	if (ping_setup(ctx) != 0)
 		return (1);
-	sa.sa_handler = sig_handler;
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGINT, &sa, NULL) == -1) {
-		perror("sigaction()");
+	if (signal_setup() != 0) {
 		ping_cleanup(ctx);
 		return (1);
 	}
