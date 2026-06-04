@@ -67,6 +67,7 @@ typedef struct t_ping_ctx {
 	double rtt_sum_sq;
 } t_ping_ctx;
 
+/* Global variables */
 extern int g_pingloop;
 
 /* Prototypes */
