@@ -14,19 +14,13 @@ void print_help(const char *progname)
 	printf("  %s [options] hostname\n", progname);
 	printf("\n");
 	printf("Options:\n");
-	printf("  -v\n");
-	printf("  -h, -?\n");
-	printf("  -f\n");
-	printf("  -l\n");
-	printf("  -n\n");
-	printf("  -w\n");
-	printf("  -W\n");
-	printf("  -p\n");
-	printf("  -r\n");
-	printf("  -s\n");
-	printf("  -T\n");
-	printf("  --ttl\n");
-	printf("  --ip-timestamp\n");
+	printf("  -?, --help     Give this help list\n");
+	printf("  -c, --count    Stop after sending COUNT packets\n");
+	printf("  -v, --verbose  Verbose output\n");
+	printf("  -w, --timeout  Stop after TIMEOUT seconds\n");
+	printf("  -f, --flood    Flood ping (root only)\n");
+	printf("  -p, --pattern  Fill ICMP packet with given pattern (hex)\n");
+	printf("  -q, --quiet    Quiet output\n");
 	printf("\n");
 }
 
