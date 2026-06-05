@@ -2,8 +2,10 @@
 
 #include <stdio.h> // dprintf()
 #include <string.h> // strcmp()
+#include <limits.h> // INT_MAX
+#include <stdlib.h> // strol()
 
-#include <stdlib.h> // atoi(); //! To change
+typedef int (*t_parser)(const char *str, void *out);
 
 static int parse_hostname(t_ping_ctx *ctx, char *arg)
 {
@@ -14,34 +16,76 @@ static int parse_hostname(t_ping_ctx *ctx, char *arg)
 	return (1);
 }
 
+static int parse_value_int(const char *str, void *out)
+{
+	char *end;
+	long val;
+
+	val = strtol(str, &end, 10);
+	if (*end != '\0' || val <= 0 || val > INT_MAX) {
+		return (1);
+	}
+	*(int *)out = (int)val;
+	return (0);
+}
+
+static int parse_value_pattern(const char *str, void *out)
+{
+	if (strlen(str) == 4 && str[0] == '\0' && str[1] == 'x')
+		take care of pattern hexa
+	else take care of pattern normal
+	return (0);
+}
+
+static int parse_value(t_ping_ctx *ctx, int argc, char **argv,
+                       int *i, t_parser parser, void *out)
+{
+	if (*i + 1 == argc) {
+		dprintf(2, "%s: Error: Option '%s' requires a value\n",
+		        ctx->progname, argv[*i]);
+		return (1);
+	}
+	if (parser(argv[*i + 1], out)) {
+		dprintf(2, "%s: Error: Option %s: Value '%s' is invalid\n",
+		        ctx->progname, argv[*i], argv[*i + 1]);
+		return (1);
+	}
+	(*i)++;
+	return (0);
+}
+
 static int parse_flag(t_ping_ctx *ctx, int argc, char **argv, int *i)
 {
-	(void)argc;
-
 	if (strcmp(argv[*i], "-h") == 0 || strcmp(argv[*i], "-?") == 0 || strcmp(argv[*i], "--help") == 0)
 		ctx->flags |= FLAG_HELP;
 	else if (strcmp(argv[*i], "-v") == 0 || strcmp(argv[*i], "--verbose") == 0)
 		ctx->flags |= FLAG_VERBOSE;
+	if (strcmp(argv[*i], "-c") == 0 || strcmp(argv[*i], "--count") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_long_long, &ctx->count) != 0)
+			return (1);
+	}
 	else if (strcmp(argv[*i], "-f") == 0 || strcmp(argv[*i], "--flood") == 0) {
 		ctx->flags |= FLAG_FLOOD;
 		ctx->interval = 0.01;
 	}
-	else if (strcmp(argv[*i], "-w") == 0 || strcmp(argv[*i], "--timeout") == 0) {
-		ctx->flags |= FLAG_TIMEOUT;
-		(*i)++;
-		ctx->timeout = atoi(argv[*i]);
+	else if (strcmp(argv[*i], "-p") == 0 || strcmp(argv[*i], "--pattern") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_pattern, &ctx->preload) != 0)
+			return (1);
 	}
-	else if (strcmp(argv[*i], "-n") == 0 || strcmp(argv[*i], "--numeric") == 0)
-		ctx->flags |= FLAG_NUMERIC;
-	else if (strcmp(argv[*i], "-r") == 0 || strcmp(argv[*i], "--ignore-routing") == 0)
-		ctx->flags |= FLAG_IGNORE_ROUTING;
-
-	else if (strcmp(argv[*i], "-l") == 0 || strcmp(argv[*i], "--preload") == 0)
-		ctx->flags |= FLAG_VERBOSE;
-	else if (strcmp(argv[*i], "-s") == 0 || strcmp(argv[*i], "--preload") == 0)
-		ctx->flags |= FLAG_VERBOSE;
-	else
+	else if (strcmp(argv[*i], "-q") == 0 || strcmp(argv[*i], "--quiet") == 0)
+		ctx->flags |= FLAG_QUIET;
+	else if (strcmp(argv[*i], "-w") == 0 || strcmp(argv[*i], "--deadline") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_int, &ctx->deadline) != 0)
+			return (1);
+	}
+	else {
+		dprintf(2, "%s: Error: Option '%s' is invalid\n",
+		        ctx->progname, argv[*i]);
 		return (1);
+	}
 	return (0);
 }
 

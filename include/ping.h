@@ -11,15 +11,13 @@
 /* Macros */
 #define DATA_SIZE 56
 
-#define FLAG_VERBOSE (1 << 0) // -v, --verbose
-#define FLAG_HELP (1 << 1) // -h, -?, --help
-#define FLAG_FLOOD (1 << 2) // -f
-#define FLAG_PRELOAD (1 << 3) // -l
-#define FLAG_NUMERIC (1 << 4) // -n
-#define FLAG_DEADLINE (1 << 5) // -w
-#define FLAG_TIMEOUT (1 << 4) // -W
-#define FLAG_PATTERN (1 << 0) // -p, --pattern
-#define FLAG_IGNORE_ROUTING (1 << 0) // -p, --pattern
+#define FLAG_HELP (1 << 0) // -h, -?, --help
+#define FLAG_VERBOSE (1 << 1) // -v, --verbose
+#define FLAG_COUNT (1 << 2) // -c, --count
+#define FLAG_FLOOD (1 << 3) // -f, --flood
+#define FLAG_PATTERN (1 << 4) // -p, --pattern
+
+#define FLAG_DEADLINE (1 << 4) // -w
 
 #define DEFAULT_INTERVAL 1.0
 
@@ -48,11 +46,13 @@ typedef struct t_ping_ctx {
 	/* Args */
 	const char *progname;
 	const char *hostname;
+	unsigned long flags;
 	int ttl;
 	long long count;
 	double interval;
-	unsigned long flags;
+	int deadline;
 	int timeout;
+	unsigned char pattern;
 
 	/* Socket */
 	int sockfd;

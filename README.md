@@ -15,14 +15,14 @@ TODO:
 
 
 TODO :
--f -> fix bug amazon.com
--l
--n -> inutile ??
--w ->
--W
--p
--r
--s
--T
---ttl
---ip-timestamp
+-v -> checker les messages discord
+
+-h -> parsing
+
+-f -> parsing
+-l -> parsing
+-w -> parsing
+-p -> 
+--ttl ->
+-c ->
+-q ->
