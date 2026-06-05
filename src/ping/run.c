@@ -27,7 +27,7 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	if (icmp_send(ctx, &pkt) != 0)
 		return (1);
 	ctx->send++;
-	if (ctx->flags & FLAG_FLOOD)
+	if (ctx->flags & FLAG_FLOOD && !(ctx->flags & FLAG_QUIET))
 		printf(".");
 	if (icmp_recv(ctx, &reply) != 0)
 		return (0);

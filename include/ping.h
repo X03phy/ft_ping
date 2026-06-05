@@ -16,8 +16,8 @@
 #define FLAG_COUNT (1 << 2) // -c, --count
 #define FLAG_FLOOD (1 << 3) // -f, --flood
 #define FLAG_PATTERN (1 << 4) // -p, --pattern
-
-#define FLAG_DEADLINE (1 << 4) // -w
+#define FLAG_QUIET (1 << 5) // -q, --quiet
+#define FLAG_DEADLINE (1 << 6) // -w
 
 #define DEFAULT_INTERVAL 1.0
 

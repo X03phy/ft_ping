@@ -40,8 +40,11 @@ void print_header(const t_ping_ctx *ctx)
 	printf("\n");
 }
 
-void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply, double rtt)
+void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
+                    double rtt)
 {
+	if (ctx->flags & FLAG_QUIET)
+		return ;
 	if (ctx->flags & FLAG_FLOOD) {
 		printf("\b \b");
 		return ;
