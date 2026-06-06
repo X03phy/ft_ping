@@ -5,7 +5,7 @@
 #include <stddef.h> // NULL()
 #include <stdio.h> // dprintf()
 #include <string.h> // strcmp()
-#include <stdlib.h> // strol()
+#include <stdlib.h> // strod(), strol()
 
 typedef int (*t_parser)(const char *str, void *out);
 
