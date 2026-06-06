@@ -67,7 +67,7 @@ extern int g_pingloop;
 
 /* Prototypes */
 /* icmp/build.c */
-t_icmp_pkt icmp_build(unsigned short seq);
+t_icmp_pkt icmp_build(t_ping_ctx *ctx, unsigned short seq);
 
 /* icmp/net.c */
 int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt);

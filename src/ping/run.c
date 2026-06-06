@@ -23,7 +23,7 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 	struct timeval tv_send;
 	double rtt;
 
-	pkt = icmp_build(seq);
+	pkt = icmp_build(ctx, seq);
 	if (icmp_send(ctx, &pkt) != 0)
 		return (1);
 	ctx->send++;
