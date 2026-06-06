@@ -44,12 +44,10 @@ typedef struct t_ping_ctx {
 	const char *progname;
 	const char *hostname;
 	unsigned long flags;
-	int ttl;
-	long long count;
-	double interval;
-	int deadline;
-	int timeout;
-	unsigned char pattern;
+	int count; // -c, --count
+	double interval; // -i, --interval
+	int ttl; // -t, --ttl
+	unsigned char pattern; // -p, --pattern
 
 	/* Socket */
 	int sockfd;
