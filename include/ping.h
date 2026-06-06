@@ -16,8 +16,6 @@
 #define FLAG_FLOOD (1 << 2) // -f, --flood
 #define FLAG_QUIET (1 << 3) // -q, --quiet
 
-#define DEFAULT_INTERVAL 1.0
-
 /* Structures */
 typedef struct t_icmp_hdr {
 	uint8_t type;
