@@ -1,8 +1,10 @@
 #include "ping.h"
 
+#include <ctype.h> // isxdigit()
+#include <limits.h> // INT_MAX
+#include <stddef.h> // NULL()
 #include <stdio.h> // dprintf()
 #include <string.h> // strcmp()
-#include <limits.h> // INT_MAX
 #include <stdlib.h> // strol()
 
 typedef int (*t_parser)(const char *str, void *out);
@@ -13,28 +15,44 @@ static int parse_hostname(t_ping_ctx *ctx, char *arg)
 		ctx->hostname = arg;
 		return (0);
 	}
+	dprintf(2, "%s: Error: Too many hostnames\n", ctx->progname);
 	return (1);
 }
 
-static int parse_value_deadline(const char *str, void *out)
+static int parse_value_int(const char *str, void *out)
 {
 	char *end;
 	long val;
 
 	val = strtol(str, &end, 10);
-	if (*end != '\0' || val <= 0 || val > INT_MAX) {
+	if (*end != '\0' || val <= 0 || val > INT_MAX)
 		return (1);
-	}
 	*(int *)out = (int)val;
 	return (0);
 }
 
-//static int parse_value_pattern(const char *str, void *out)
-//{
-//	if (strlen(str) != 2)
-//		return (1);
-//	return (0);
-//}
+static int parse_value_double(const char *str, void *out)
+{
+	char *end;
+	double val;
+
+	val = strtod(str, &end);
+	if (*end != '\0' || val <= 0)
+		return (1);
+	*(double *)out = (double)val;
+	return (0);
+}
+
+static int parse_value_pattern(const char *str, void *out)
+{
+	if (strlen(str) != 2)
+		return (1);
+	if (!isxdigit((unsigned char)str[0])
+	    || !isxdigit((unsigned char)str[1]))
+		return (1);
+	*(unsigned char *)out = (unsigned char)strtol(str, NULL, 16);
+	return (0);
+}
 
 static int parse_value(t_ping_ctx *ctx, int argc, char **argv,
                        int *i, t_parser parser, void *out)
@@ -58,32 +76,32 @@ static int parse_flag(t_ping_ctx *ctx, int argc, char **argv, int *i)
 	if (strcmp(argv[*i], "-?") == 0
 	           || strcmp(argv[*i], "--help") == 0)
 		ctx->flags |= FLAG_HELP;
-	//else if (strcmp(argv[*i], "-c") == 0
-	//         || strcmp(argv[*i], "--count") == 0) {
-	//	if (parse_value(ctx, argc, argv, i,
-	//	                parse_value_long_long, &ctx->count) != 0)
-	//		return (1);
-	//}
+	else if (strcmp(argv[*i], "-c") == 0
+	        || strcmp(argv[*i], "--count") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_int, &ctx->count) != 0)
+			return (1);
+	}
+	else if (strcmp(argv[*i], "-i") == 0
+	         || strcmp(argv[*i], "--interval") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_double, &ctx->interval) != 0)
+			return (1);
+	}
 	else if (strcmp(argv[*i], "-v") == 0
 	         || strcmp(argv[*i], "--verbose") == 0)
 		ctx->flags |= FLAG_VERBOSE;
-	else if (strcmp(argv[*i], "-w") == 0
-	         || strcmp(argv[*i], "--deadline") == 0) {
-		if (parse_value(ctx, argc, argv, i,
-		                parse_value_deadline, &ctx->deadline) != 0)
-			return (1);
-	}
 	else if (strcmp(argv[*i], "-f") == 0
 	         || strcmp(argv[*i], "--flood") == 0) {
 		ctx->flags |= FLAG_FLOOD;
 		ctx->interval = 0.01;
 	}
-	//else if (strcmp(argv[*i], "-p") == 0
-	//         || strcmp(argv[*i], "--pattern") == 0) {
-	//	if (parse_value(ctx, argc, argv, i,
-	//	                parse_value_pattern, &ctx->preload) != 0)
-	//		return (1);
-	//}
+	else if (strcmp(argv[*i], "-p") == 0
+	        || strcmp(argv[*i], "--pattern") == 0) {
+		if (parse_value(ctx, argc, argv, i,
+		                parse_value_pattern, &ctx->pattern) != 0)
+			return (1);
+	}
 	else if (strcmp(argv[*i], "-q") == 0
 	         || strcmp(argv[*i], "--quiet") == 0)
 		ctx->flags |= FLAG_QUIET;
