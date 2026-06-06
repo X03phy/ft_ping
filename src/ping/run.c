@@ -51,7 +51,7 @@ static int ping_loop(t_ping_ctx *ctx)
 		if (ping_once(ctx, seq) != 0)
 			return (1);
 		seq++;
-		if (ctx->count != 0 && seq >= (unsigned short)ctx->count)
+		if (ctx->count && seq >= (unsigned short)ctx->count)
 			break ;
 		gettimeofday(&tv_after, NULL);
 		wait_remaining_time(ctx, &tv_before, &tv_after);
