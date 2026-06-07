@@ -8,22 +8,6 @@
 #include <stdio.h> // printf()
 #include <math.h> // sqrt()
 
-void print_help(const char *progname)
-{
-	printf("Usage:\n");
-	printf("  %s [options] hostname\n", progname);
-	printf("\n");
-	printf("Options:\n");
-	printf("  -?, --help      Give this help list\n");
-	printf("  -c, --count     Stop after sending COUNT packets\n");
-	printf("  -i, --interval  Wait INTERVAL seconds between sending each packet\n");
-	printf("  -v, --verbose   Verbose output\n");
-	printf("  -f, --flood     Flood ping (root only)\n");
-	printf("  -p, --pattern   Fill ICMP packet with given pattern (hex)\n");
-	printf("  -q, --quiet     Quiet output\n");
-	printf("\n");
-}
-
 void print_header(const t_ping_ctx *ctx)
 {
 	char ip[INET_ADDRSTRLEN];
@@ -49,9 +33,12 @@ void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
 		printf("\b \b");
 		return ;
 	}
-	printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
-	       sizeof(t_icmp_pkt), inet_ntoa(reply->from.sin_addr),
-	       reply->pkt.hdr.seq, reply->ttl, rtt);
+	if (!(ctx->flags & FLAG_VERBOSE))
+		printf("%zu bytes from %s: icmp_seq=%u ttl=%d time=%.3f ms\n",
+		       sizeof(t_icmp_pkt), inet_ntoa(reply->from.sin_addr),
+		       reply->pkt.hdr.seq, reply->ttl, rtt);
+	else
+		print_verbose(ctx, reply, rtt);
 }
 
 void print_stats(const t_ping_ctx *ctx)
