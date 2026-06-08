@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     gdb valgrind strace \
     inetutils-ping \
     iproute2 \
+    iptables \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

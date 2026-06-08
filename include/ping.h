@@ -32,17 +32,17 @@ typedef struct s_icmp_pkt {
 } t_icmp_pkt;
 
 typedef struct s_icmp_reply {
+	/* External packet */
+	struct ip ip;
 	t_icmp_pkt pkt;
-	struct ip ip_hdr;
 	struct sockaddr_in from;
-
 	int ttl;
 	size_t len;
 	struct timeval tv_recv;
-	uint16_t seq;
 
-	uint8_t type;
-	uint8_t code;
+	/* Inner packet */
+	struct ip inner_ip;
+	t_icmp_hdr inner_icmp;
 } t_icmp_reply;
 
 typedef struct s_ping_ctx {
@@ -110,7 +110,6 @@ void print_header(const t_ping_ctx *ctx);
 void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
                     double rtt);
 void print_stats(const t_ping_ctx *ctx);
-void print_verbose(const t_ping_ctx *ctx, const t_icmp_reply *reply,
-                    double rtt);
+void print_verbose(const t_icmp_reply *reply);
 
 #endif
