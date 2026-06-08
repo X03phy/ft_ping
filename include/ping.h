@@ -3,6 +3,7 @@
 
 /* Includes */
 #include <netinet/in.h> // struct sockaddr_in
+#include <netinet/ip_icmp.h> // struct ip
 
 #include <sys/time.h> // struct timeval
 
@@ -17,7 +18,7 @@
 #define FLAG_QUIET (1 << 3) // -q, --quiet
 
 /* Structures */
-typedef struct t_icmp_hdr {
+typedef struct s_icmp_hdr {
 	uint8_t type;
 	uint8_t code;
 	uint16_t checksum;
@@ -25,19 +26,26 @@ typedef struct t_icmp_hdr {
 	uint16_t seq;
 } t_icmp_hdr;
 
-typedef struct t_icmp_pkt {
+typedef struct s_icmp_pkt {
 	t_icmp_hdr hdr;
 	char data[DATA_SIZE];
 } t_icmp_pkt;
 
 typedef struct s_icmp_reply {
-    t_icmp_pkt pkt;
-    struct sockaddr_in from;
-    int ttl;
-    struct timeval tv_recv;
+	t_icmp_pkt pkt;
+	struct ip ip_hdr;
+	struct sockaddr_in from;
+
+	int ttl;
+	size_t len;
+	struct timeval tv_recv;
+	uint16_t seq;
+
+	uint8_t type;
+	uint8_t code;
 } t_icmp_reply;
 
-typedef struct t_ping_ctx {
+typedef struct s_ping_ctx {
 	/* Args */
 	const char *progname;
 	const char *hostname;
@@ -102,5 +110,7 @@ void print_header(const t_ping_ctx *ctx);
 void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
                     double rtt);
 void print_stats(const t_ping_ctx *ctx);
+void print_verbose(const t_ping_ctx *ctx, const t_icmp_reply *reply,
+                    double rtt);
 
 #endif

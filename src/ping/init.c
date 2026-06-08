@@ -11,7 +11,7 @@ void ping_init(t_ping_ctx *ctx)
 	ctx->flags = 0;
 	ctx->count = 0;
 	ctx->interval = 1.0;
-	ctx->ttl = 64;
+	ctx->ttl = 1; // 64
 	ctx->pattern = 0;
 
 	/* Socket */

@@ -1,7 +1,7 @@
 #include "ping.h"
 
 #include <arpa/inet.h> // ntohs()
-#include <netinet/ip_icmp.h> // struct ip, ICMP_ECHOREPLY
+#include <netinet/ip_icmp.h> // struct ip, ICMP_ECHOREPLY, IP_MAXPACKET
 #include <sys/socket.h> // struct sockaddr, recvfrom(), sendto()
 
 #include <sys/time.h> // gettimeofday()
@@ -29,25 +29,41 @@ int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt)
 static int icmp_parse(t_icmp_reply *reply, const char *buf, size_t len) //! Add expected seq
 {
 	struct ip *ip;
-	t_icmp_pkt *recv_pkt;
+	size_t ip_hlen;
+	t_icmp_hdr *icmp;
 
-	if (len < sizeof(struct ip) + sizeof(t_icmp_pkt))
+	if (len < sizeof(struct ip) + sizeof(t_icmp_hdr))
 		return (1);
 	ip = (struct ip *)buf;
-	recv_pkt = (t_icmp_pkt *)(buf + ip->ip_hl * 4);
-	if (recv_pkt->hdr.type != ICMP_ECHOREPLY ||
-	    ntohs(recv_pkt->hdr.id) != (uint16_t)(getpid() & 0xFFFF))
-		return (1);
-	reply->pkt = *recv_pkt;
-	reply->pkt.hdr.seq = ntohs(recv_pkt->hdr.seq);
-	reply->pkt.hdr.id = ntohs(recv_pkt->hdr.id);
+	ip_hlen = ip->ip_hl * 4;
+	icmp = (t_icmp_hdr *)(buf + ip_hlen);
+	//if (recv_pkt->hdr.type != ICMP_ECHOREPLY ||
+	//    ntohs(recv_pkt->hdr.id) != (uint16_t)(getpid() & 0xFFFF))
+	//	return (1);
+	reply->ip_hdr = *ip;
+	reply->type = icmp->type;
+	reply->code = icmp->code;
+	reply->seq = icmp->seq;
 	reply->ttl = ip->ip_ttl;
+	printf("%d\n", reply->ttl);
+
+	if (icmp->type == ICMP_ECHOREPLY) {
+		if (ntohs(icmp->id) != (uint16_t)(getpid() & 0xFFFF))
+			return (1);
+		reply->pkt = *(t_icmp_pkt *)(buf + ip_hlen);
+		reply->ip_hdr = *ip;
+		//reply->pkt.hdr.seq = ntohs(recv_pkt->hdr.seq);
+		//reply->pkt.hdr.id = ntohs(recv_pkt->hdr.id);
+		reply->ttl = ip->ip_ttl;
+	}
+	else
+		printf("Hello\n");
 	return (0);
 }
 
 int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply)
 {
-	char buf[sizeof(struct ip) + sizeof(t_icmp_pkt)];
+	char buf[IP_MAXPACKET];
 	socklen_t fromlen;
 	ssize_t r;
 

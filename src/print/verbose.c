@@ -12,5 +12,15 @@ void print_verbose(const t_ping_ctx *ctx, const t_icmp_reply *reply,
 	printf("%zu bytes from %s: Error Message\n",
 	       sizeof(t_icmp_pkt), inet_ntoa(reply->from.sin_addr));
 	printf("IP header dump:\n");
-	printf("%02x\n", *(unsigned char *)reply->ip);
+	unsigned char *p;
+	size_t i;
+
+	p = (unsigned char *)&reply->ip_hdr;
+	for (i = 0; i < sizeof(struct ip); i++)
+	{
+		printf("%02x", p[i]);
+		if (i % 2)
+			printf(" ");
+	}
+	printf("\n");
 }
