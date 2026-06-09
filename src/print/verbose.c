@@ -10,7 +10,7 @@ void print_verbose(const t_icmp_reply *reply)
 	int i;
 
 	words = (uint16_t *)&reply->inner_ip;
-	printf("IP Hdr Dump:\n");
+	printf("IP header dump:\n");
 	i = 0;
 	printf(" ");
 	while (i < (int)(sizeof(struct ip) / 2)) {

@@ -40,16 +40,16 @@ static int icmp_parse_reply(t_icmp_reply *reply, const char *buf, size_t len)
 	icmp = (t_icmp_hdr *)(buf + ip_hlen);
 	reply->ip = *ip;
 	reply->ttl = ip->ip_ttl;
-	reply->pkt.hdr = *icmp;
 	reply->len = len - ip_hlen;
 	if (icmp->type == ICMP_ECHOREPLY) {
 		if (ntohs(icmp->id) != (uint16_t)(getpid() & 0xFFFF))
 			return (1);
-		reply->pkt = *(t_icmp_pkt *)(buf + ip_hlen); // Pq reply->pkt.hdr n'est pas overwritten ?
+		reply->pkt = *(t_icmp_pkt *)(buf + ip_hlen);
 		reply->pkt.hdr.seq = ntohs(icmp->seq);
 		reply->pkt.hdr.id = ntohs(icmp->id);
 		return (0);
 	}
+	reply->pkt.hdr = *icmp;
 	inner = buf + ip_hlen + sizeof(t_icmp_hdr);
 	if ((size_t)(inner - buf) + sizeof(struct ip) + sizeof(t_icmp_hdr) > len)
 		return (1);
