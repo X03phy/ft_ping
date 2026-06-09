@@ -9,6 +9,9 @@
 
 #include <stdint.h> // uintX_t
 
+/* Types */
+typedef int (*t_parser)(const char *str, void *out);
+
 /* Macros */
 #define DATA_SIZE 56
 
@@ -68,45 +71,39 @@ typedef struct s_ping_ctx {
 	double rtt_sum_sq;
 } t_ping_ctx;
 
-typedef int (*t_parser)(const char *str, void *out);
-
 /* Global variables */
 extern int g_pingloop;
 
 /* Prototypes */
-/* icmp/build.c */
-t_icmp_pkt icmp_build(t_ping_ctx *ctx, unsigned short seq);
+/* parsing */
+int parse_value_unsigned_char(const char *str, void *out);
+int parse_value_int(const char *str, void *out);
+int parse_value_double(const char *str, void *out);
+int parse_value_pattern(const char *str, void *out);
+int parse_value(t_ping_ctx *ctx, int argc, char **argv,
+                int *i, t_parser parser, void *out);
+int parse_args(t_ping_ctx *ctx, int argc, char **argv);
 
-/* icmp/net.c */
-int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt);
-int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply);
-
-/* ping/init.c */
-void ping_init(t_ping_ctx *ctx);
-
-/* ping/setup.c */
-int ping_setup(t_ping_ctx *ctx);
-
-/* ping/run.c */
-int ping_run(t_ping_ctx *ctx);
-
-/* ping/cleanup.c */
-void ping_cleanup(t_ping_ctx *ctx);
-
-/* signal/setup.c */
-int signal_setup(void);
-
-/* time/diff.c */
+/* time */
 double time_diff_ms(struct timeval *start, struct timeval *end);
-
-/* time.wait.c */
 void wait_remaining_time(t_ping_ctx *ctx, struct timeval *before,
                          struct timeval *after);
 
-/* utils/args.c */
-int parse_args(t_ping_ctx *ctx, int argc, char **argv);
+/* icmp */
+t_icmp_pkt icmp_build(t_ping_ctx *ctx, unsigned short seq);
+int icmp_send(const t_ping_ctx *ctx, const t_icmp_pkt *pkt);
+int icmp_recv(t_ping_ctx *ctx, t_icmp_reply *reply);
 
-/* utils/print.c */
+/* signal */
+int signal_setup(void);
+
+/* ping */
+void ping_init(t_ping_ctx *ctx);
+int ping_setup(t_ping_ctx *ctx);
+int ping_run(t_ping_ctx *ctx);
+void ping_cleanup(t_ping_ctx *ctx);
+
+/* print */
 void print_help(const char *progname);
 void print_header(const t_ping_ctx *ctx);
 void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
@@ -114,10 +111,4 @@ void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
 void print_stats(const t_ping_ctx *ctx);
 void print_verbose(const t_icmp_reply *reply);
 
-int parse_value_unsigned_char(const char *str, void *out);
-int parse_value_int(const char *str, void *out);
-int parse_value_double(const char *str, void *out);
-int parse_value_pattern(const char *str, void *out);
-int parse_value(t_ping_ctx *ctx, int argc, char **argv,
-                int *i, t_parser parser, void *out);
 #endif
