@@ -26,7 +26,7 @@ static void icmp_fill_data(t_ping_ctx *ctx, char *data)
 	memset(data + sizeof(tv), ctx->pattern, DATA_SIZE - sizeof(tv));
 }
 
-static unsigned short icmp_checksum(void *data, size_t len) //! recheck
+static unsigned short icmp_checksum(void *data, size_t len)
 {
 	unsigned short *buf;
 	unsigned int sum;

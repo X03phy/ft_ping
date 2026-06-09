@@ -1,6 +1,7 @@
 #include "ping.h"
 
 #include <arpa/inet.h> // INET_ADDRSTRLEN, inet_ntoa(), inet_ntop()
+#include <netinet/ip_icmp.h> // ICMP_X
 #include <sys/socket.h> // AF_INET
 
 #include <unistd.h> // getpid()

@@ -1,11 +1,9 @@
 #include "ping.h"
 
-#include <netdb.h> // struct addrinfo, gai_strerror(), getaddrinfo(),
-                   // freeaddrinfo()
+#include <netdb.h> // struct addrinfo, gai_strerror(), getaddrinfo(), freeaddrinfo()
 #include <netinet/in.h> // struct sockaddr_in
 #include <netinet/ip.h> // IPPROTO_IP, IP_TTL
-#include <sys/socket.h> // AF_INET, IPPROTO_ICMP, SOCK_RAW, SOL_SOCKET,
-                        // SO_RCVTIMEO, setsockopt(), socket()
+#include <sys/socket.h> // AF_INET, IPPROTO_ICMP, SOCK_RAW, SOL_SOCKET, SO_RCVTIMEO, setsockopt(), socket()
 
 #include <sys/time.h> // struct timeval, suseconds_t
 #include <unistd.h> // close()
