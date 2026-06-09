@@ -6,7 +6,7 @@
 #include <stdio.h> // printf()
 #include <string.h> // memcpy()
 
-static void update_rtt(t_ping_ctx *ctx, int rtt)
+static void update_rtt(t_ping_ctx *ctx, double rtt)
 {
 	if (ctx->rtt_min < 0 || rtt < ctx->rtt_min)
 		ctx->rtt_min = rtt;
@@ -31,11 +31,14 @@ static int ping_once(t_ping_ctx *ctx, unsigned short seq)
 		printf(".");
 	if (icmp_recv(ctx, &reply) != 0)
 		return (0);
-	ctx->received++;
-	memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
-	rtt = time_diff_ms(&tv_send, &reply.tv_recv);
+	rtt = 0;
+	if (reply.pkt.hdr.type == ICMP_ECHOREPLY) {
+		ctx->received++;
+		memcpy(&tv_send, reply.pkt.data, sizeof(tv_send));
+		rtt = time_diff_ms(&tv_send, &reply.tv_recv);
+		update_rtt(ctx, rtt);
+	}
 	print_response(ctx, &reply, rtt);
-	update_rtt(ctx, rtt);
 	return (0);
 }
 

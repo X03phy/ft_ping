@@ -107,6 +107,9 @@ static void print_icmp_error(int type, int code)
 			break;
 		}
 		break;
+	default:
+		printf("type %d, code %d\n", type, code);
+		break;
 	}
 }
 
