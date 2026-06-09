@@ -68,6 +68,8 @@ typedef struct s_ping_ctx {
 	double rtt_sum_sq;
 } t_ping_ctx;
 
+typedef int (*t_parser)(const char *str, void *out);
+
 /* Global variables */
 extern int g_pingloop;
 
@@ -112,4 +114,10 @@ void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
 void print_stats(const t_ping_ctx *ctx);
 void print_verbose(const t_icmp_reply *reply);
 
+int parse_value_unsigned_char(const char *str, void *out);
+int parse_value_int(const char *str, void *out);
+int parse_value_double(const char *str, void *out);
+int parse_value_pattern(const char *str, void *out);
+int parse_value(t_ping_ctx *ctx, int argc, char **argv,
+                int *i, t_parser parser, void *out);
 #endif
