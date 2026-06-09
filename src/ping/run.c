@@ -1,5 +1,6 @@
 #include "ping.h"
 
+#include <netinet/ip_icmp.h> // ICMP_ECHOREPLY
 #include <sys/time.h> // struct timeval, gettimeofday()
 
 #include <stddef.h> // NULL
