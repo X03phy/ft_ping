@@ -128,10 +128,11 @@ void print_response(const t_ping_ctx *ctx, const t_icmp_reply *reply,
 	if (reply->pkt.hdr.type == ICMP_ECHOREPLY)
 		printf("icmp_seq=%u ttl=%d time=%.3f ms\n",
 		       reply->pkt.hdr.seq, reply->ttl, rtt);
-	else
+	else {
 		print_icmp_error(reply->pkt.hdr.type, reply->pkt.hdr.code);
-	if (ctx->flags & FLAG_VERBOSE)
-		print_verbose(reply);
+		if (ctx->flags & FLAG_VERBOSE)
+			print_verbose(reply);
+	}
 }
 
 void print_stats(const t_ping_ctx *ctx)
